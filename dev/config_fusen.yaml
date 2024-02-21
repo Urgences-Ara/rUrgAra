@@ -15,3 +15,16 @@ flat_first.Rmd:
     check: true
     document: true
     overwrite: ask
+flat_plot_urgara.Rmd:
+  path: dev/flat_plot_urgara.Rmd
+  state: active
+  R: R/plot_add_logo.R
+  tests: tests/testthat/test-plot_add_logo.R
+  vignettes: vignettes/plotting-with-rurgara.Rmd
+  inflate:
+    flat_file: dev/flat_plot_urgara.Rmd
+    vignette_name: Plotting with rUrgAra
+    open_vignette: false
+    check: true
+    document: true
+    overwrite: ask
