@@ -6,3 +6,9 @@
 .Rdata
 .quarto
 inst/doc
+/R/*
+/vignettes/*
+/tests/*
+/man/*
+DESCRIPTION
+NAMESPACE

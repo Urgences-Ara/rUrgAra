@@ -7,11 +7,15 @@ Description: Package developped to facilitate reccurent actions for
     Urg'Ara users. Theses actions include applying the graphical chart to
     plots, creating reports and plotting a charge diagram.
 License: MIT + file LICENSE
-URL: https://github.com/CC-URGARA/rUrgAra
-BugReports: https://github.com/CC-URGARA/rUrgAra/issues
 Imports: 
+    dplyr,
+    ggplot2,
+    grid,
+    gridExtra,
+    jpeg,
+    lubridate,
     magrittr,
-    stats
+    stringr
 Suggests: 
     knitr,
     rmarkdown,
