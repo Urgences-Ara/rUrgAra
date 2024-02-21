@@ -4,6 +4,8 @@
 # rUrgAra
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/CC-URGARA/rUrgAra/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CC-URGARA/rUrgAra/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of rUrgAra is to …

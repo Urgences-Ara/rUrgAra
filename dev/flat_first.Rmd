@@ -47,6 +47,35 @@ nyc_squirrels
 ```
 
 
+
+# Add a company logo to a ggplot
+    
+Add a company logo (by default urg'ara) to a ggplot.
+    
+```{r function-plot_add_logo}
+#' Title
+#' 
+#' Description
+#' 
+#' @return
+#' 
+#' @export
+plot_add_logo <- function(){
+    
+}
+```
+  
+```{r example-plot_add_logo}
+plot_add_logo()
+```
+  
+```{r tests-plot_add_logo}
+test_that("plot_add_logo works", {
+  expect_true(inherits(plot_add_logo, "function")) 
+})
+```
+  
+
 # The first function of the package: Calculate the median of a vector
 
 <!--

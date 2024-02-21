@@ -124,3 +124,10 @@ devtools::build(vignettes = TRUE)
 fusen::init_share_on_github()
 ```
 
+
+# Adding new functions
+```{r}
+fusen::add_additional(flat_name = "ggplot_add_logo")
+```
+
+

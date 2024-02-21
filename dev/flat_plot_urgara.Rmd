@@ -1,0 +1,50 @@
+---
+title: "flat_plot_urgara.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Every fonctions used for plotting purposes
+
+
+# plot_urgara
+
+```{r function-plot_urgara}
+#' plot_urgara Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+plot_urgara <- function() {
+  1
+}
+```
+
+```{r examples-plot_urgara}
+plot_urgara()
+```
+
+```{r tests-plot_urgara}
+test_that("plot_urgara works", {
+
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = "Go further")
+```
+
