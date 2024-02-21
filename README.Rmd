@@ -16,8 +16,6 @@ knitr::opts_chunk$set(
 # rUrgAra
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/CC-URGARA/rUrgAra/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CC-URGARA/rUrgAra/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/CC-URGARA/rUrgAra/branch/master/graph/badge.svg)](https://app.codecov.io/gh/CC-URGARA/rUrgAra?branch=master)
 <!-- badges: end -->
 
 The goal of rUrgAra is to ...
@@ -30,10 +28,6 @@ You can install the development version of rUrgAra from [GitHub](https://github.
 # install.packages("devtools")
 devtools::install_github("CC-URGARA/rUrgAra")
 ```
-
-## Documentation
-
-Full documentation website on: https://CC-URGARA.github.io/rUrgAra
 
 ## Example
 
