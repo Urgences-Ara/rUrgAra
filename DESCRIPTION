@@ -1,0 +1,12 @@
+Package: rUrgAra
+Version: 0.0.0.9000
+Title: UrgAra Package For Internal Use
+Description: Package developped to facilitate reccurent actions for Urg'Ara users. Theses actions include applying the graphical chart to plots, creating reports and plotting a charge diagram.
+Authors@R: person(given = "Clément",
+       family = "Claustre",
+       role = c("aut", "cre"),
+       email = "clement.claustre@urgences-ara.fr")
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
