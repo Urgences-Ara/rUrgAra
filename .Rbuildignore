@@ -3,3 +3,6 @@
 ^README\.Rmd$
 ^\.github$
 ^codecov\.yml$
+^CODE_OF_CONDUCT\.md$
+^rUrgAra\.Rproj$
+^\.Rproj\.user$
