@@ -19,17 +19,34 @@ fusen::load_flat_functions()
 fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = "test", open_vignette = F)
 ```
 
+
+```{r function-df_ex_charge}
+#' df_ex_charge
+#'
+#' exemple dataset containing a set of 500 entry and exit date in january 2022
+#'
+#' @format A tibble frame with 500 rows and 2 variables:
+#' \describe{
+#'   \item{ ENTREE }{  dttm }
+#'   \item{ SORTIE }{  dttm }
+#' }
+"df_ex_charge"
+```
+
+
 # plot_diag_charge
     
 ```{r development-plot_diag_charge}
 library(tidyverse)
 library(lubridate)
 
-data = tibble(ENTREE = "27/12/1993 15h15h20",
-              SORTIE = "28/12/1993 12h02h30")
+data = df_ex_charge
 entry = "ENTREE"
 exit = "SORTIE"
 strata = NULL
+from = NULL
+to = NULL
+max_LOS = Inf
 ```
 
     
@@ -42,32 +59,58 @@ strata = NULL
 #' @param entry The name of the column containing the datetime of entry. The colmum must be of class POSIXct or character in the format DD/MM/YYYY HH:MM:SS.
 #' @param exit The name of the column containing the datetime of exit. The colmum must be of class POSIXct or character in the format DD/MM/YYYY HH:MM:SS.
 #' @param strata The name of the colum(s) containing statas (e.g. structures) to average the charge over.
+#' @param from The start of the time frame to consider (dmy). Number of patients will be averaged over the number of days between "from" and "to" and entry date/times will be truncated at "from". Default value is the minimum date in the entry column.
+#' @param to The end of the time frame to consider (dmy). Number of patients will be averaged over the number of days between "from" and "to" and exit date/times will be truncated at "to". Default value is the maximum date in the exit column.
+#' @param max_LOS Maximum length of stay for patients in minutes. Patients with durations longer than max_LOS will be considered as having missing length of stay.
 #' 
-#' @return A list. tab contains the table used to make the charge diagram. plot contains the charge diagram
+#' @return A list. tab contains the table used to make the charge diagram. plot contains the charge diagram.
 #' 
 #' @export
 #' 
-plot_diag_charge <- function(data, entry, exit, strata = NULL){
+plot_diag_charge <- function(data, entry, exit, strata = NULL,
+                             from = NULL, to = NULL, max_LOS = Inf){
   #type check
   type_entry = dplyr::pull(data, entry) %>% class
-  type_exit = dplyr::pull(data, entry) %>% class
-  if(type_entry != type_exit)stop("entry and exit must have the same type")
+  type_exit = dplyr::pull(data, exit) %>% class
+  if(any(type_entry != type_exit))stop("entry and exit must have the same type")
+  format_to_from_ok = function(x){#testing format param from and to
+    if(is.null(x)) return(TRUE)
+    if(length(x) >= 1 | !is.character(x)) return(FALSE)
+    if(!is.na(lubridate::dmy(x))) return(TRUE)
+    return(FALSE)
+  }
+  if(!format_to_from_ok(from)){stop("from must be NULL or a character string containing a date in the DMY format")}
+  if(!format_to_from_ok(to)){stop("to must be NULL or a character string containing a date in the DMY format")}
+  if(!is.numeric(max_LOS) | max_LOS <= 0){stop("max_LOS must be numeric and positive")}
   
   #rename entry/exit/strata column
   data <- data %>%
     dplyr::select(dh_entry = {entry}, dh_exit = {exit}, strata = {strata})
   
   #convertion to dmy_hms
-  if(type_entry == "character"){
+  if(is.character(data$dh_entry)){
     data <- data %>%
       dplyr::mutate(dplyr::across(c("dh_entry", "dh_exit"), lubridate::dmy_hms))
   }
   
+  #handling of default values for "from", "to"
+  if(is.null(from)){from = min(lubridate::date(data$dh_entry), na.rm = T)} else {from = lubridate::dmy(from)}
+  if(is.null(to)){to = max(lubridate::date(data$dh_exit), na.rm = T)} else {to = lubridate::dmy(to)}
+  
+  #Removing delays over max_LOS
+  data$LOS = difftime(data$dh_exit, data$dh_entry, units = "mins")
+  LOS_over = data$LOS > max_LOS
+  if(sum(data$LOS > max_LOS, na.rm = T) > 0){
+    warning(paste(sum(data$LOS > max_LOS, na.rm = T),
+                  "delays have been removed because of length of stay superior to", 
+                  max_LOS, "minutes"))}
+  data = data %>% dplyr::filter(!LOS_over)
+  
   #computation of the table of charge
-  tab_charge <- fct_tab_charge(data)
+  tab_charge <- fct_tab_charge(data = data, from = from, to = to, max_LOS = max_LOS)
   
   #plotting of the charge diagram
-  plot_charge <- fct_plot_charge(tab_charge)
+  plot_charge <- fct_plot_charge(data = data, tab_charge = tab_charge, max_LOS = max_LOS)
   
   return(list(tab = tab_charge,
               plot = plot_charge))
@@ -75,7 +118,12 @@ plot_diag_charge <- function(data, entry, exit, strata = NULL){
 ```
   
 ```{r example-plot_diag_charge}
-# plot_diag_charge()
+library(rUrgAra)
+list_charge = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
+                               exit = "SORTIE", max_LOS = 72*60)
+head(list_charge$tab)
+list_charge$plot
+plot_add_logo(list_charge$plot)
 ```
   
 ```{r tests-plot_diag_charge}
@@ -150,17 +198,112 @@ test_that("plot_add_logo works", {
 ## fct_tab_charge
     
 ```{r function-fct_tab_charge}
-#' Title
+#' Charge table
 #' 
-#' Description
+#' Internal function. Makes a charge table with one line per hour of the day (entry) per hour of the day (exit) and returns a charge table used to plot a charge diagram
+#' 
+#' @param data tibble with two columns, dh_entry and dh_exit
+#' @inheritParams plot_diag_charge
 #' 
 #' @return a tibble
 #' 
 #' @noRd
-fct_tab_charge <- function(tab){
-    placeholder = dplyr::tibble()
-    return(placeholder)
-}
+fct_tab_charge <- function(data, from, to, max_LOS){
+  #denominator
+  n_days <- as.numeric(1 + difftime(to, from, units = "days"))
+  if("strata" %in% names(data)){
+    n_strata <- length(unique(data$strata))
+  } else{n_strata = 1}
+ 
+  #winsorisation of entry and exit to from and to
+  data$entry_corrected_fact = lubridate::date(data$dh_entry) < from
+  data$dh_entry_corrected = dplyr::if_else(data$entry_corrected_fact,
+                                           lubridate::ymd_hms(paste(from, "00:00:01")),
+                                           data$dh_entry)
+  
+  data$exit_corrected_fact = lubridate::date(data$dh_exit) > to
+  data$dh_exit_corrected = dplyr::if_else(data$exit_corrected_fact,
+                                          lubridate::ymd_hms(paste(to, "23:59:59")),
+                                          data$dh_exit)
+
+  #Computation of intermediary variables
+  data_interm <- data %>%
+    dplyr::mutate(#recomputation LOS and entry times after winsorization
+      LOS = as.numeric(difftime(dh_exit_corrected, dh_entry_corrected, units = "mins")),
+      H_entry = lubridate::hour(dh_entry_corrected),
+      H_exit = lubridate::hour(dh_exit_corrected),
+      entry_minute = H_entry*60 + lubridate::minute(dh_entry_corrected)#entry time in minutes since midnight
+    ) %>%
+    dplyr::select(entry_minute, LOS, entry_corrected_fact, H_entry, H_exit) %>%
+    dplyr::mutate(exit_minute = entry_minute + LOS,
+                  H_exit_comp = exit_minute %/% 60,#hour of exit with 00h of entry day (can be over 23h59)
+                  H_exit_corrected = dplyr::if_else(H_exit_comp > 23, 23, as.numeric(H_exit)),#winsorizing it to 23hxx
+                  exit_corrected_fact = as.numeric(H_exit_comp > 23),
+                  nb_cycles = H_exit_comp %/% 24,#number of times 24h fit in the LOS
+                  H_exit_last_cycle = H_exit,
+                  H_entry = dplyr::if_else(entry_corrected_fact, -1, as.numeric(H_entry)))
+
+  #Number of "full cycles" to add (patient present from 00h01 to 23h59)
+  nb_H24_add = data_interm  %>%
+    dplyr::filter(nb_cycles > 0) %>%
+    dplyr::summarise(nb_cycle_tot = sum(nb_cycles - 1)) %>%
+    dplyr::pull(nb_cycle_tot)
+
+  #table of "full cycles" 
+  tab_full_day_supp <- tibble::tibble(
+    H_entry = rep(-1, nb_H24_add),
+    H_exit = rep(23, nb_H24_add),
+    exit_corrected_fact = 1
+  ) %>%
+    dplyr::mutate_all(as.numeric)
+
+  #table of "half cycles" to add (patient arrived the day before and leaves this day)
+  tab_final_day <- tibble::tibble(#ajout de x lignes correpsond à des passages -1 à "heure de sortie dernier cycle)
+    H_entry = -1,
+    H_exit = data_interm %>% dplyr::filter(nb_cycles > 0) %>% dplyr::pull(H_exit_last_cycle),
+    exit_corrected_fact = 0
+  ) %>%
+    dplyr::mutate_all(as.numeric)
+
+  #merge of full cycles, half cycles and first days
+  data_calc_charge = dplyr::bind_rows(data_interm %>% dplyr::select(H_entry, H_exit = H_exit_corrected, exit_corrected_fact),
+                                      tab_full_day_supp,
+                                      tab_final_day)
+
+  #Speed up following computation by merging indentical rows
+  data_calc_charge_agreg = data_calc_charge %>%
+    dplyr::group_by(H_entry, H_exit, exit_corrected_fact) %>%
+    dplyr::count()
+  
+  #For each hour of the day, count the number of patient present from wich time of arrival (-1 = day before)
+  tab_n = lapply(seq(1, 24, by = 1), function(H){
+    data_calc_charge_agreg %>%
+      dplyr::filter((H_entry < H & H_exit >= H) |
+                      (H_entry == H -1 & H_exit == H - 1 & exit_corrected_fact == 0) |
+                      (H == 1 & H_entry == "-1" & H_exit == 0) |#special case first hour
+                      (H == 24 & exit_corrected_fact == 1)#special case last hour
+                    ) %>%
+      dplyr::group_by(H_entry) %>%
+      dplyr::summarise(n = sum(n)) %>%
+      dplyr::mutate(Hour = H) %>%
+      dplyr::ungroup()
+  }) %>%
+    dplyr::bind_rows() %>%
+    dplyr::mutate(H_entry = factor(H_entry, levels = c("-1", 0:23)),#ensure every time is present after the next "complete"
+                  Hour = factor(Hour, levels = c(1:24))) %>%
+    tidyr::complete(H_entry,
+                    Hour,
+                    fill = list(n = 0)) %>%
+    dplyr::mutate(H_entry = as.numeric(as.character(H_entry)),#revert to the numeric type
+                  Hour = as.numeric(as.character(Hour)))
+
+  tab_n$n_strata = n_strata
+  tab_n$n_days = n_days
+  
+  tab_n$n_avg = tab_n$n/(n_days*n_strata)
+
+  return(tab_n)
+  }
 ```
   
 ```{r tests-fct_tab_charge}
@@ -173,17 +316,72 @@ test_that("rurgara_tab_charge works", {
 ## fct_plot_charge
     
 ```{r function-fct_plot_charge}
-#' Title
+#' plot charge diagram
 #' 
-#' Description
+#' plot a charge diagram from the "tab_charge" object created by plot_diag_charge()
 #' 
+#' @param data data passed from plot_diag_charge
+#' @param tab_charge table created by fct_tab_charge
+#' @inheritParams plot_diag_charge
+#'
 #' @return a ggplot
-#' 
 #' @noRd
-fct_plot_charge <- function(tab){
-    placeholder = ggplot2::ggplot(data.frame(), ggplot2::aes(x = 1, y = 1)) +
-      ggplot2::geom_point()
-    return(placeholder)
+fct_plot_charge <- function(data, tab_charge, max_LOS){
+  #computation of the number of entry/exit per hour
+  tab_entry <- data %>%
+    dplyr::filter(LOS < max_LOS) %>%
+    dplyr::mutate(Hour = lubridate::hour(dh_entry) + 1,
+                  Hour = factor(Hour, levels = c(1:24))) %>%
+    dplyr::group_by(Hour, .drop = F) %>%
+    dplyr::count() %>%
+    dplyr::mutate(Hour = as.numeric(as.character(Hour)),
+                  n_days = dplyr::first(tab_charge$n_days),
+                  n_strata = dplyr::first(tab_charge$n_strata),
+                  n_avg = n/(n_days*n_strata)) %>%
+    dplyr::ungroup()
+
+  tab_exit <- data %>%
+    dplyr::filter(LOS < max_LOS) %>%
+    dplyr::mutate(Hour = lubridate::hour(dh_exit) + 1,
+                  Hour = factor(Hour, levels = c(1:24))) %>%
+    dplyr::group_by(Hour, .drop = F) %>%
+    dplyr::count() %>%
+    dplyr::mutate(Hour = as.numeric(as.character(Hour)),
+                  n_days = dplyr::first(tab_charge$n_days),
+                  n_strata = dplyr::first(tab_charge$n_strata),
+                  n_avg = n/(n_days*n_strata)) %>%
+    dplyr::ungroup()
+  
+  #Creation of a color palet
+  pal1 <- RColorBrewer::brewer.pal(8, "Accent")
+  pal2 <- RColorBrewer::brewer.pal(8, "Dark2")
+  pal3 <- RColorBrewer::brewer.pal(8, "Set2")
+  if(tab_charge %>% dplyr::filter(H_entry < 0) %>% sum(.$n) > 0){#at least one patient from the day before => add black to the front of the palette
+    pal <- c("black", pal1, pal2, pal3)
+  } else {#if no patients are from the day before black is not used
+    pal <- c(pal1, pal2, pal3)
+  }
+  
+  #plot rendering
+  plot <- ggplot2::ggplot(tab_charge, ggplot2::aes()) +
+    ggplot2::geom_density(ggplot2::aes(y = n_avg, x = as.numeric(Hour), fill = factor(H_entry, levels = c("-1", 0:23))),
+                          stat = "identity",  position = "stack", color = NA) +
+    ggplot2::geom_line(ggplot2::aes(y = n_avg, x = Hour, color = "Nombre d'entr\u00E9es"), data = tab_entry, linewidth = 1.2) +
+    ggplot2::geom_line(ggplot2::aes(y = n_avg, x = Hour, color = "Nombre de sorties"), data = tab_exit, linewidth = 1.2) +
+    ggplot2::scale_fill_manual(values = pal) +
+    ggplot2::scale_x_continuous(name = "", breaks = seq(1,24, by = 1),
+                                labels = paste0("< ", seq(1,24, by = 1), "h")) +
+    ggplot2::scale_y_continuous(name = "Nombre moyen de patients", breaks = scales::pretty_breaks(10)) +
+    ggplot2::scale_color_manual(name = "", values = c("Nombre d'entr\u00E9es" = "darkgreen", "Nombre de sorties" = "darkred")) +
+    ggplot2::coord_cartesian(xlim = c(1,24), ylim = c(0,NA)) +
+    ggpubr::theme_pubclean() +
+    ggplot2::guides(fill = "none") +
+    ggplot2::theme(text=ggplot2::element_text(family="serif", size=15)) +
+    ggplot2::theme(legend.position = "bottom",
+                   legend.key = ggplot2::element_blank(),
+                   axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+  
+    return(plot)
 }
 ```
   

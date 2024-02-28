@@ -23,6 +23,7 @@ flat_plot_urgara.Rmd:
   - R/fct_tab_charge.R
   - R/plot_add_logo.R
   - R/plot_diag_charge.R
+  - R/na-na.R
   tests:
   - tests/testthat/test-plot_diag_charge.R
   - tests/testthat/test-plot_add_logo.R

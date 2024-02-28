@@ -7,15 +7,22 @@ Description: Package developped to facilitate reccurent actions for
     Urg'Ara users. Theses actions include applying the graphical chart to
     plots, creating reports and plotting a charge diagram.
 License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
 Imports: 
     dplyr,
     ggplot2,
+    ggpubr,
     grid,
     gridExtra,
     jpeg,
     lubridate,
     magrittr,
-    stringr
+    RColorBrewer,
+    scales,
+    stringr,
+    tibble,
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,
@@ -24,5 +31,6 @@ VignetteBuilder:
     knitr
 Config/fusen/version: 0.5.2
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
