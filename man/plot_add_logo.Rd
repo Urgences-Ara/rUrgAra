@@ -2,7 +2,11 @@
 % Please edit documentation in R/plot_add_logo.R
 \name{plot_add_logo}
 \alias{plot_add_logo}
+<<<<<<< HEAD
 \title{Add company logo to a plot}
+=======
+\title{add company logo to a plot}
+>>>>>>> 467edd424d4727f4aa58d2bad5856ef469206fb4
 \usage{
 plot_add_logo(plot, logo = NULL, height = 0.1, width = 0.2)
 }
@@ -23,7 +27,11 @@ Adds a company logo (by default Urg'Ara) to a plot. A custom logo can be used by
 }
 \examples{
 library(ggplot2)
+<<<<<<< HEAD
 plot_test = ggplot(data.frame(), ggplot2::aes(x = 1, y = 1)) +
+=======
+plot_test = ggplot(data.frame(), aes(x = 1, y = 1)) +
+>>>>>>> 467edd424d4727f4aa58d2bad5856ef469206fb4
   geom_point()
 plot_add_logo(plot = plot_test)
 }

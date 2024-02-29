@@ -18,6 +18,7 @@ flat_first.Rmd:
 flat_plot_urgara.Rmd:
   path: dev/flat_plot_urgara.Rmd
   state: active
+<<<<<<< HEAD
   R:
   - R/fct_plot_charge.R
   - R/fct_tab_charge.R
@@ -33,6 +34,14 @@ flat_plot_urgara.Rmd:
   inflate:
     flat_file: dev/flat_plot_urgara.Rmd
     vignette_name: test
+=======
+  R: R/plot_add_logo.R
+  tests: tests/testthat/test-plot_add_logo.R
+  vignettes: vignettes/plotting-with-rurgara.Rmd
+  inflate:
+    flat_file: dev/flat_plot_urgara.Rmd
+    vignette_name: Plotting with rUrgAra
+>>>>>>> 467edd424d4727f4aa58d2bad5856ef469206fb4
     open_vignette: false
     check: true
     document: true

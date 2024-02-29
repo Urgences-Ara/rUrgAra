@@ -7,6 +7,7 @@ Description: Package developped to facilitate reccurent actions for
     Urg'Ara users. Theses actions include applying the graphical chart to
     plots, creating reports and plotting a charge diagram.
 License: MIT + file LICENSE
+<<<<<<< HEAD
 Depends: 
     R (>= 2.10)
 Imports: 
