@@ -2,8 +2,5 @@
 
 export("%>%")
 export(plot_add_logo)
-<<<<<<< HEAD
 export(plot_diag_charge)
-=======
->>>>>>> 467edd424d4727f4aa58d2bad5856ef469206fb4
 importFrom(magrittr,"%>%")

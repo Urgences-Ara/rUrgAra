@@ -16,7 +16,7 @@ fusen::load_flat_functions()
 ```
 
 ```{r development-inflat}
-fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = "test", open_vignette = F)
+fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = "plotting", open_vignette = F)
 ```
 
 
