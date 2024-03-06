@@ -2,7 +2,6 @@ pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  plotting-with-rurgara: plotting-with-rurgara.html
   plotting: plotting.html
-last_built: 2024-03-06T12:47Z
+last_built: 2024-03-06T15:40Z
 
