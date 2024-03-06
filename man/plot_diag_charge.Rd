@@ -30,16 +30,33 @@ plot_diag_charge(
 \item{max_LOS}{Maximum length of stay for patients in minutes. Patients with durations longer than max_LOS will be considered as having missing length of stay.}
 }
 \value{
-A list. tab contains the table used to make the charge diagram. plot contains the charge diagram.
+A list. tab contains the table used to make the charge diagram. H_entry = "-1" for patients entered the day before. plot contains the charge diagram.
 }
 \description{
 Plot a charge diagram from a table with an entre datetime and exit datetime. A charge diagram shows the number of individuals and their time of arrival for each hour/half hour of a day.
 }
 \examples{
 library(rUrgAra)
+#Table of entry/exit times
+head(df_ex_charge)
+#Charge diagram with exclusion of patients staying more than 3 days (72*60 = 4320 minutes)
+# not taking into account strata 
 list_charge = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
                                exit = "SORTIE", max_LOS = 72*60)
+#plot_diag_charge return two objects, a table showing for each hour of
+# the day how many patient came from what hour (-1 = day before)
 head(list_charge$tab)
+#a charge diagram
 list_charge$plot
-plot_add_logo(list_charge$plot)
+
+#adding a strata to take into account that data are coming from two hospitals
+list_charge_stratified = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
+                                          exit = "SORTIE", strata = "Etablissement",
+                                          max_LOS = 72*60)
+#plot_diag_charge return two objects, a table showing for each hour of
+# the day how many patient came from what hour (-1 = day before)
+head(list_charge_stratified$tab)
+#a charge diagram
+list_charge_stratified$plot
+
 }

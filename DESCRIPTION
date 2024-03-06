@@ -10,13 +10,12 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
 Imports: 
+    cowplot,
     dplyr,
     ggplot2,
     ggpubr,
-    grid,
-    gridExtra,
-    jpeg,
     lubridate,
+    magick,
     magrittr,
     RColorBrewer,
     scales,

@@ -19,21 +19,17 @@ flat_plot_urgara.Rmd:
   path: dev/flat_plot_urgara.Rmd
   state: active
   R:
-  - R/fct_plot_charge.R
-  - R/fct_tab_charge.R
   - R/plot_add_logo.R
   - R/plot_diag_charge.R
-  - R/na-na.R
+  - R/na.R
   tests:
   - tests/testthat/test-plot_diag_charge.R
   - tests/testthat/test-plot_add_logo.R
-  - tests/testthat/test-fct_tab_charge.R
-  - tests/testthat/test-fct_plot_charge.R
   vignettes: vignettes/plotting.Rmd
   inflate:
     flat_file: dev/flat_plot_urgara.Rmd
     vignette_name: plotting
-    open_vignette: false
+    open_vignette: true
     check: true
     document: true
     overwrite: ask

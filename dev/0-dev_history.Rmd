@@ -139,7 +139,8 @@ M = sample(0:59, 500, replace = T)
 H = sample(0:23, 500, replace = T, prob = c(rep(0.01, 6), rep(0.03, 6), rep(0.05, 6), rep(0.02, 6)))
 df_ex_charge = tibble::tibble(
   ENTREE = lubridate::dmy_hms(paste0(D, "/01/2022 ", H, ":", M, ":00")),
-  SORTIE = ENTREE + rnorm(n = 500, mean = 21600, sd = 3600)
+  SORTIE = ENTREE + rnorm(n = 500, mean = 21600, sd = 3600),
+  Etablissement = c(rep("A", 300), rep("B", 200))
 )
 
 usethis::use_data(df_ex_charge, overwrite = T)

@@ -12,17 +12,34 @@
 #' @param to The end of the time frame to consider (dmy). Number of patients will be averaged over the number of days between "from" and "to" and exit date/times will be truncated at "to". Default value is the maximum date in the exit column.
 #' @param max_LOS Maximum length of stay for patients in minutes. Patients with durations longer than max_LOS will be considered as having missing length of stay.
 #' 
-#' @return A list. tab contains the table used to make the charge diagram. plot contains the charge diagram.
+#' @return A list. tab contains the table used to make the charge diagram. H_entry = "-1" for patients entered the day before. plot contains the charge diagram.
 #' 
 #' @export
 #' 
 #' @examples
 #' library(rUrgAra)
+#' #Table of entry/exit times
+#' head(df_ex_charge)
+#' #Charge diagram with exclusion of patients staying more than 3 days (72*60 = 4320 minutes)
+#' # not taking into account strata 
 #' list_charge = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
 #'                                exit = "SORTIE", max_LOS = 72*60)
+#' #plot_diag_charge return two objects, a table showing for each hour of
+#' # the day how many patient came from what hour (-1 = day before)
 #' head(list_charge$tab)
+#' #a charge diagram
 #' list_charge$plot
-#' plot_add_logo(list_charge$plot)
+#'
+#' #adding a strata to take into account that data are coming from two hospitals
+#' list_charge_stratified = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
+#'                                           exit = "SORTIE", strata = "Etablissement",
+#'                                           max_LOS = 72*60)
+#' #plot_diag_charge return two objects, a table showing for each hour of
+#' # the day how many patient came from what hour (-1 = day before)
+#' head(list_charge_stratified$tab)
+#' #a charge diagram
+#' list_charge_stratified$plot
+#'
 plot_diag_charge <- function(data, entry, exit, strata = NULL,
                              from = NULL, to = NULL, max_LOS = Inf){
   #type check

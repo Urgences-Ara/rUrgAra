@@ -6,3 +6,8 @@
 ^CODE_OF_CONDUCT\.md$
 ^rUrgAra\.Rproj$
 ^\.Rproj\.user$
+^doc$
+^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
