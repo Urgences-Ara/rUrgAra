@@ -54,6 +54,9 @@ list_charge_stratified$plot
 
 ```
 
+  
+
+  
 
 # Adding a company logo to a plot
 

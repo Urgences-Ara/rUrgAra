@@ -62,7 +62,7 @@ plot_diag_charge <- function(data, entry, exit, strata = NULL,
   if(any(type_entry != type_exit))stop("entry and exit must have the same type")
   format_to_from_ok = function(x){#testing format param from and to
     if(is.null(x)) return(TRUE)
-    if(length(x) >= 1 | !is.character(x)) return(FALSE)
+    if(length(x) > 1 | !is.character(x)) return(FALSE)
     if(!is.na(lubridate::dmy(x))) return(TRUE)
     return(FALSE)
   }
