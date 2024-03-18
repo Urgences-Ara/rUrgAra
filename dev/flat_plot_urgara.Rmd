@@ -84,6 +84,21 @@ plot_diag_charge <- function(data, entry, exit, strata = NULL,
   if(is.null(from)){from = min(lubridate::date(data$dh_entry), na.rm = T)} else {from = lubridate::dmy(from)}
   if(is.null(to)){to = max(lubridate::date(data$dh_exit), na.rm = T)} else {to = lubridate::dmy(to)}
   
+  #Removing lines outside of "from" and "to"
+  if(from > to){stop('"from" must be equal or earlier than "to"')}
+  nrow_before = nrow(data)
+  data <- data %>%
+    dplyr::filter(dplyr::between(lubridate::date(.data$dh_entry), 
+                                 from, to) |#arrived between from and to
+                    dplyr::between(lubridate::date(.data$dh_exit), 
+                                   from, to) |#left between from and to
+                    (lubridate::date(.data$dh_entry) <= from & 
+                       lubridate::date(.data$dh_exit) >= to))#Arriver before from and left after to
+  nrow_after = nrow(data)
+  if(nrow_before != nrow_after){
+    warning(paste0(nrow_before - nrow_after, " rows were removed because they were outside of the studied range."))
+  }
+  
   #Removing delays over max_LOS
   data$LOS = difftime(data$dh_exit, data$dh_entry, units = "mins")
   LOS_over = data$LOS > max_LOS
