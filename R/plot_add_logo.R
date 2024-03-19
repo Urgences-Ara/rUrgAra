@@ -88,7 +88,7 @@ fct_tab_charge <- function(data, from, to, max_LOS){
   #winsorisation of entry and exit to from and to
   data$entry_corrected_fact = lubridate::date(data$dh_entry) < from
   data$dh_entry_corrected = dplyr::if_else(data$entry_corrected_fact,
-                                           lubridate::ymd_hms(paste(from, "00:00:01")),
+                                           lubridate::ymd_hms(paste(from, "00:00:00")),
                                            data$dh_entry)
   
   data$exit_corrected_fact = lubridate::date(data$dh_exit) > to
@@ -102,14 +102,19 @@ fct_tab_charge <- function(data, from, to, max_LOS){
       LOS = as.numeric(difftime(.data$dh_exit_corrected, .data$dh_entry_corrected, units = "mins")),
       H_entry = lubridate::hour(.data$dh_entry_corrected),
       H_exit = lubridate::hour(.data$dh_exit_corrected),
-      entry_minute = .data$H_entry*60 + lubridate::minute(.data$dh_entry_corrected)#entry time in minutes since midnight
+      entry_minute = .data$H_entry*60 + lubridate::minute(.data$dh_entry_corrected),#entry time in minutes since midnight
+      d_entry_corrected = lubridate::date(.data$dh_entry_corrected),
+      d_exit_corrected = lubridate::date(.data$dh_exit_corrected)
     ) %>%
-    dplyr::select("entry_minute", "LOS", "entry_corrected_fact", "H_entry", "H_exit") %>%
+    dplyr::select("entry_minute", "LOS", "entry_corrected_fact", "H_entry",
+                  "H_exit", "d_entry_corrected", "d_exit_corrected") %>%
     dplyr::mutate(exit_minute = .data$entry_minute + .data$LOS,
                   H_exit_comp = .data$exit_minute %/% 60,#hour of exit with 00h of entry day (can be over 23h59)
-                  H_exit_corrected = dplyr::if_else(.data$H_exit_comp > 23, 23, as.numeric(.data$H_exit)),#winsorizing it to 23hxx
-                  exit_corrected_fact = as.numeric(.data$H_exit_comp > 23),
+                  H_exit_corrected = dplyr::if_else(.data$d_entry_corrected < .data$d_exit_corrected, 23, as.numeric(.data$H_exit)),#winsorizing it to 23hxx
+                  exit_corrected_fact = as.numeric(.data$d_entry_corrected < .data$d_exit_corrected),
                   nb_cycles = .data$H_exit_comp %/% 24,#number of times 24h fit in the LOS
+                  nb_cycles = dplyr::if_else(.data$nb_cycles == 0 & .data$d_entry_corrected < .data$d_exit_corrected, 
+                                             1, .data$nb_cycles),#correct an edge case
                   H_exit_last_cycle = .data$H_exit,
                   H_entry = dplyr::if_else(.data$entry_corrected_fact, -1, as.numeric(.data$H_entry)))
 
