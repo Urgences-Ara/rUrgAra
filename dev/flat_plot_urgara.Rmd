@@ -16,8 +16,10 @@ fusen::load_flat_functions()
 ```
 
 ```{r development-inflat}
-fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = "plotting", open_vignette = T)
+fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = NA, open_vignette = F)
 ```
+
+# Exemple dataset
 
 ```{r function-df_ex_charge}
 #' df_ex_charge
@@ -447,4 +449,3 @@ test_that("plot_add_logo works", {
 })
 ```
   
-

@@ -21,15 +21,20 @@ flat_plot_urgara.Rmd:
   R:
   - R/plot_diag_charge.R
   - R/plot_add_logo.R
-  - R/na.R
+  - R/scale_color_urgara.R
+  - R/scale_fill_urgara.R
+  - R/urgara_cols.R
+  - R/urgara_pal.R
+  - R/exemple-dataset.R
+  - R/color-palettes.R
   tests:
   - tests/testthat/test-plot_diag_charge.R
   - tests/testthat/test-plot_add_logo.R
-  vignettes: vignettes/plotting.Rmd
+  vignettes: []
   inflate:
     flat_file: dev/flat_plot_urgara.Rmd
-    vignette_name: plotting
-    open_vignette: true
+    vignette_name: .na
+    open_vignette: false
     check: true
     document: true
     overwrite: ask
