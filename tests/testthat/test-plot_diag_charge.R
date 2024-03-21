@@ -3,3 +3,11 @@
 test_that("plot_diag_charge works", {
   expect_true(inherits(plot_diag_charge, "function")) 
 })
+
+test_that("rurgara_tab_charge works", {
+  expect_true(inherits(fct_tab_charge, "function")) 
+})
+
+test_that("fct_plot_charge works", {
+  expect_true(inherits(fct_plot_charge, "function")) 
+})

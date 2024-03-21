@@ -58,6 +58,15 @@ list_charge_stratified$plot
 
   
 
+  
+
+<!-- ## fct_plot_charge -->
+    
+
+  
+
+  
+
 # Adding a company logo to a plot
 
 This exemple shows how to add a company logo (by default UrgAra's) to a ggplot object.
@@ -79,18 +88,4 @@ plot_add_logo(plot_cars, width = 0.4)#wider logo
 
   
 
-<!-- # utils plot -->
-<!-- ## fct_tab_charge -->
-    
-
-  
-
-  
-
-<!-- ## fct_plot_charge -->
-    
-
-  
-
-  
 

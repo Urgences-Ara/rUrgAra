@@ -153,105 +153,7 @@ test_that("plot_diag_charge works", {
   expect_true(inherits(plot_diag_charge, "function")) 
 })
 ```
-  
-# Adding a company logo to a plot
 
-```{r function-plot_add_logo}
-#' Add company logo to a plot
-#' 
-#' @description Adds a company logo (by default Urg'Ara) to a plot. A custom logo can be used by specifying a path to the logo
-#' 
-#' @param plot A ggplot object
-#' @param logo The path to an image file. If NULL, the Urg'Ara logo will be used instead
-#' @param height The height of the logo in proportion of the graph (default 0.1)
-#' @param width The width of the logo in proportion of the graph (default 0.2)
-#' @param position The position of the logo. Possible values are "bottom right", "bottom", "bottom left", "top right", "top", "top left"
-#' @param remove.margin Should the margin of the plot be removed on the side of the logo for a more precise fit
-#' 
-#' @return a ggplot2 object
-#' 
-#' @export
-plot_add_logo <- function(plot, logo = NULL, height = 0.1, width = 0.2, 
-                          position = c("bottom right", "bottom", "bottom left",
-                                       "top right", "top", "top left"),
-                          remove.margin = TRUE){
-  #type check
-  if(!is.numeric(height) | !is.numeric(width)){
-    stop("Height and width must be numerical")} else
-      if(!dplyr::between(height, 0, 1) | !dplyr::between(width, 0, 1)){
-        stop("Height and width myst be between 0 and 1")
-      }
-  if(!is.character(position)){stop("position must be a character vector")} else
-    if(!position[1] %in% c("bottom right", "bottom", "bottom left",
-                           "top right", "top", "top left")){
-      stop("Wrong value for position. Check the help page for a list of allowed values")
-    }
-  if(!ggplot2::is.ggplot(plot)) stop("plot must be a ggplot object")
-  if(!is.null(logo)){
-    if(!stringr::str_detect(logo, ".jpg$")) stop("Logo must point to a .jpg file")
-    if(!file.exists(logo)) stop(paste0(logo, " does not exist"))
-  }
-
-  #removing margins of input plot
-  if(remove.margin){
-    if(grepl("^top", position[1])){
-          plot = plot + 
-            ggplot2::theme(plot.margin = ggplot2::margin(t = 0))
-    } else if(grepl("^bottom", position[1])){
-          plot = plot + 
-            ggplot2::theme(plot.margin = ggplot2::margin(b = 0))
-    }
-  }
-  
-  #loading of the logo 
-  if(is.null(logo)){logo = paste0(path.package(package = "rUrgAra"), "/img/logo_urgara.jpg")}
-  logo_img = magick::image_read(logo)
-  
-  #resolution of position
-  xy = dplyr::case_when(
-    position[1] == "bottom right" ~ c(1-width, 0),
-    position[1] == "bottom" ~ c(0.5-(width/2), 0), 
-    position[1] == "bottom left" ~ c(0, 0),
-    position[1] == "top right" ~ c(1-width, 1-height), 
-    position[1] == "top" ~ c(0.5-(width/2), 1-height), 
-    position[1] == "top left" ~ c(0, 1-height)
-  )
-  #y coordinate of the plot (0 if logo at the top, 0+heigth if logo at the bottom)
-  y_plot = dplyr::if_else(xy[2] == 0, 0 + height, 0)
-  
-  #adding logo image to the plot at designated coordinates
-  plot_logoed = cowplot::ggdraw() +
-    cowplot::draw_plot(plot, x = 0, y = y_plot, width = 1, height = 1-height) +
-    cowplot::draw_image(logo_img, x = xy[1], y = xy[2], width = width, height = height)
-   
-  return(plot_logoed)
-}
-```
-
-This exemple shows how to add a company logo (by default UrgAra's) to a ggplot object.
-
-```{r example-plot_add_logo, fig.width=10, fig.height=7}
-library(rUrgAra)
-library(ggplot2)
-plot_cars = ggplot(cars, ggplot2::aes(x = speed, y = dist)) +
-  geom_point() +
-  ggpubr::theme_pubclean()
-
-plot_add_logo(plot_cars)#default
-plot_add_logo(plot_cars, position = "top left")#logo at the top
-plot_add_logo(plot_cars, width = 0.4)#wider logo
-```
-  
-```{r tests-plot_add_logo}
-test_that("plot_add_logo works", {
-  expect_true(inherits(plot_add_logo, "function"))
-})
-```
-  
-
-<!-- # utils plot -->
-<!-- ## fct_tab_charge -->
-    
 ```{r function-fct_tab_charge}
 #' Charge table
 #' 
@@ -451,3 +353,98 @@ test_that("fct_plot_charge works", {
 })
 ```
   
+# Adding a company logo to a plot
+
+```{r function-plot_add_logo}
+#' Add company logo to a plot
+#' 
+#' @description Adds a company logo (by default Urg'Ara) to a plot. A custom logo can be used by specifying a path to the logo
+#' 
+#' @param plot A ggplot object
+#' @param logo The path to an image file. If NULL, the Urg'Ara logo will be used instead
+#' @param height The height of the logo in proportion of the graph (default 0.1)
+#' @param width The width of the logo in proportion of the graph (default 0.2)
+#' @param position The position of the logo. Possible values are "bottom right", "bottom", "bottom left", "top right", "top", "top left"
+#' @param remove.margin Should the margin of the plot be removed on the side of the logo for a more precise fit
+#' 
+#' @return a ggplot2 object
+#' 
+#' @export
+plot_add_logo <- function(plot, logo = NULL, height = 0.1, width = 0.2, 
+                          position = c("bottom right", "bottom", "bottom left",
+                                       "top right", "top", "top left"),
+                          remove.margin = TRUE){
+  #type check
+  if(!is.numeric(height) | !is.numeric(width)){
+    stop("Height and width must be numerical")} else
+      if(!dplyr::between(height, 0, 1) | !dplyr::between(width, 0, 1)){
+        stop("Height and width myst be between 0 and 1")
+      }
+  if(!is.character(position)){stop("position must be a character vector")} else
+    if(!position[1] %in% c("bottom right", "bottom", "bottom left",
+                           "top right", "top", "top left")){
+      stop("Wrong value for position. Check the help page for a list of allowed values")
+    }
+  if(!ggplot2::is.ggplot(plot)) stop("plot must be a ggplot object")
+  if(!is.null(logo)){
+    if(!stringr::str_detect(logo, ".jpg$")) stop("Logo must point to a .jpg file")
+    if(!file.exists(logo)) stop(paste0(logo, " does not exist"))
+  }
+
+  #removing margins of input plot
+  if(remove.margin){
+    if(grepl("^top", position[1])){
+          plot = plot + 
+            ggplot2::theme(plot.margin = ggplot2::margin(t = 0))
+    } else if(grepl("^bottom", position[1])){
+          plot = plot + 
+            ggplot2::theme(plot.margin = ggplot2::margin(b = 0))
+    }
+  }
+  
+  #loading of the logo 
+  if(is.null(logo)){logo = paste0(path.package(package = "rUrgAra"), "/img/logo_urgara.jpg")}
+  logo_img = magick::image_read(logo)
+  
+  #resolution of position
+  xy = dplyr::case_when(
+    position[1] == "bottom right" ~ c(1-width, 0),
+    position[1] == "bottom" ~ c(0.5-(width/2), 0), 
+    position[1] == "bottom left" ~ c(0, 0),
+    position[1] == "top right" ~ c(1-width, 1-height), 
+    position[1] == "top" ~ c(0.5-(width/2), 1-height), 
+    position[1] == "top left" ~ c(0, 1-height)
+  )
+  #y coordinate of the plot (0 if logo at the top, 0+heigth if logo at the bottom)
+  y_plot = dplyr::if_else(xy[2] == 0, 0 + height, 0)
+  
+  #adding logo image to the plot at designated coordinates
+  plot_logoed = cowplot::ggdraw() +
+    cowplot::draw_plot(plot, x = 0, y = y_plot, width = 1, height = 1-height) +
+    cowplot::draw_image(logo_img, x = xy[1], y = xy[2], width = width, height = height)
+   
+  return(plot_logoed)
+}
+```
+
+This exemple shows how to add a company logo (by default UrgAra's) to a ggplot object.
+
+```{r example-plot_add_logo, fig.width=10, fig.height=7}
+library(rUrgAra)
+library(ggplot2)
+plot_cars = ggplot(cars, ggplot2::aes(x = speed, y = dist)) +
+  geom_point() +
+  ggpubr::theme_pubclean()
+
+plot_add_logo(plot_cars)#default
+plot_add_logo(plot_cars, position = "top left")#logo at the top
+plot_add_logo(plot_cars, width = 0.4)#wider logo
+```
+  
+```{r tests-plot_add_logo}
+test_that("plot_add_logo works", {
+  expect_true(inherits(plot_add_logo, "function"))
+})
+```
+  
+
