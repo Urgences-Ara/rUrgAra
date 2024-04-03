@@ -57,7 +57,6 @@ UrgAra_palettes <- list(
 #' @param reverse Boolean indicating whether the palette should be reversed
 #' @param ... Additional arguments to pass to colorRampPalette()
 #'
-#' @export
 UrgAra_pal <- function(palette = "main", reverse = FALSE, ...) {
   pal <- UrgAra_palettes[[palette]]
 
@@ -94,7 +93,7 @@ scale_color_UrgAra <- function(palette = "main", discrete = TRUE, reverse = FALS
 
 #' Fill scale constructor for drsimonj colors
 #'
-#' @param palette Character name of palette in drsimonj_palettes
+#' @param palette Character name of palette in UrgAra_palettes (main or duo)
 #' @param discrete Boolean indicating whether color aesthetic is discrete or not
 #' @param reverse Boolean indicating whether the palette should be reversed
 #' @param ... Additional arguments passed to discrete_scale() or
