@@ -6,11 +6,13 @@
 UrgAra_colors <- list(
   `UrgAraBlue` = "#125486",
   `UrgAraRed` = "#e91b1d",
-  `UrgAraGreen` = "#4DAF4A",
-  `UrgAraPurple` = "#984EA3",
-  `UrgAraOrange` = "#FF7F00",
+  `UrgAraBlue2` = "#1c6fad",
+  `UrgAraRed2` = "#e34041",
+  `UrgAraGreen` = "#aecf38",
+  `UrgAraLightBlue` = "#93CDDD",
+  `UrgAraOrange` = "#eb9846",
   `UrgAraYellow` = "#FFFF33",
-  `UrgAraBrown` = "#A65628",
+  `UrgAraPurple` = "#d084db",
   `UrgAraPink` = "#F781BF",
   `UrgAraGrey` = "#999999"
   )
@@ -42,8 +44,9 @@ UrgAra_cols <- function(...) {
 #' @format A list
 
 UrgAra_palettes <- list(
-  `main` = UrgAra_cols("UrgAraBlue", "UrgAraRed", "UrgAraGreen", "UrgAraPurple", "UrgAraOrange", "UrgAraYellow",
-                       "UrgAraBrown", "UrgAraPink", "UrgAraGrey", "test"),
+  `main` = UrgAra_cols("UrgAraBlue2", "UrgAraRed2", "UrgAraGreen", "UrgAraLightBlue",
+                       "UrgAraOrange", "UrgAraYellow", "UrgAraBrown",  "UrgAraPurple",
+                       "UrgAraPink", "UrgAraGrey"),
   `duo` = UrgAra_cols("UrgAraBlue", "UrgAraRed")
 )
 
