@@ -1,0 +1,53 @@
+---
+author: ''
+always_allow_html: yes
+output:
+  pdf_document:
+    latex_engine: xelatex
+    includes:
+      in_header: preamble_tex.tex
+toc-title: Sommaire
+classoption: a4paper
+urlcolor: blue
+---
+
+<!-- Le titre dans le pied de page est à changer dans le fichier "preamble_tex.tex" -->
+
+```{r setup, include=FALSE}
+#global chunk parameters
+knitr::opts_chunk$set(echo = FALSE)#invisible
+knitr::opts_chunk$set(warning = FALSE)#silent
+knitr::opts_chunk$set(message = FALSE)#silent
+```
+
+<!-- Skip the title page to insert custom made title page later -->
+
+---
+  title: "&nbsp;"
+---
+
+<!-- You can add new fonts using extrafont::font_add and  showtext::showtext_auto-->
+
+\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
+
+```{r, fig.width=8.3, fig.height=11.7}
+# Insert here your code for a custom title page
+```
+
+\newgeometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+\newpage
+
+<!-- Creates the table of content -->
+
+\begingroup
+\color{blueUrgAra}
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+\endgroup
+
+\newpage
+
+<!-- Begining of the report -->
+

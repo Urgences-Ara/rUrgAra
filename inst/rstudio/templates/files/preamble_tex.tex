@@ -1,0 +1,93 @@
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{amssymb}
+\usepackage{fontspec}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{sectsty}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{lastpage}
+\usepackage{calc}
+% \usepackage{lscape}%pivote de contenu de la page
+\usepackage{pdflscape}%pivote la page entière
+
+% Changement titre de la table of content
+\renewcommand{\contentsname}{Sommaire}
+
+%base font
+\setmainfont{Calibri Light}
+%custom font
+\newfontfamily\sectionfontcustom{Calibri}
+
+%Customcolor
+\definecolor{blueUrgAra}{rgb}{0, 0.36, 0.60}
+\definecolor{colSecDemographie}{rgb}{0, 0.69, 0.94}
+\definecolor{colSecHospit}{rgb}{0.75, 0, 0}
+\definecolor{colSecDuree}{rgb}{0.59, 0.82, 0.31}
+\definecolor{colSecGravite}{rgb}{0.79, 0.79, 0.79}
+\definecolor{colSecDiag}{rgb}{1, 0.36, 0.60}
+\definecolor{colSecSortie}{rgb}{0, 0.44, 0.75}
+\definecolor{colSecProvenance}{rgb}{1, 0.60, 0.80}
+\definecolor{colSecQualite}{rgb}{1, 0.85, 0.40}
+
+%format titre section
+\sectionfont{\color{blueUrgAra}\bfseries\LARGE\sectionfontcustom}
+\subsectionfont{\color{white}\bfseries\Large\sectionfontcustom}
+
+%définition commandes
+\AtBeginDocument{\let\maketitle\relax}%Supprime la page de garde
+\newcommand{\blandscape}{\begin{landscape}}%Begin landscape
+\newcommand{\elandscape}{\end{landscape}}%End landscape
+
+%création d'une section invisibles mais présente dans la toc
+\newcommand\invisiblesection[1]{%section invisible sur la page, visible pour le sommaire
+  \refstepcounter{section}%
+  \addcontentsline{toc}{section}{#1}%
+  \sectionmark{#1}}
+
+%création du header section
+\footskip=56pt
+\newcommand{\makesubsection}[3]{%création d'un titre dans un bandeau {titre}{couleur}{icon}
+  \fboxsep0pt
+  \hspace{-1cm}
+  \colorbox{#2}{\hspace{1cm}\begin{minipage}[t][1cm][t]{20cm}
+    \vspace{-0.5cm}\hspace{1.1cm}\subsection{#1}
+    {\Large
+      \vspace{-1.7\baselineskip} % move up
+      \hfill
+      \includegraphics[height=11mm]{#3}\hspace{0.5cm}
+      \vspace{1.2\baselineskip}
+      }
+    \end{minipage}
+  }
+}
+
+%création du footer
+\def\companylogo{\includegraphics[width=\linewidth,height=70pt,keepaspectratio]{../img/logo_urgara_minimal.jpg}}
+\fancypagestyle{companypagestyle}
+{
+    \fancyhf{}
+    \fancyhead{} % clear all header fields
+    \renewcommand{\headrulewidth}{0pt} % no line in header area
+    \fancyhfoffset[L]{0cm\relax}
+    \fancyhfoffset[R]{0cm\relax}
+    \fancyfoot[L]
+    {
+        \parbox[b]{\dimexpr\linewidth-2.2cm\relax}
+        {
+            Page \thepage\ \hfill Subtitle report \\
+            {\color{blueUrgAra}\rule{\dimexpr\linewidth\relax}{0.4pt}}\\
+            \vspace{-0.4mm}www.urgences-ara.fr
+        }
+    }
+    \fancyfoot[R]
+    {
+        \parbox[b]{2cm}{\companylogo}%
+    }
+}
+
+\pagestyle{companypagestyle}
+
+

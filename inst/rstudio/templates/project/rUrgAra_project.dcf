@@ -1,0 +1,7 @@
+Binding: create_project
+Title: Create project wirh rUrgAra
+
+Parameter: project_type
+Widget: SelectInput
+Label: Project Type
+Fields: Analysis, Report
