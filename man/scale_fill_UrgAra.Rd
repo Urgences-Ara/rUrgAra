@@ -7,7 +7,7 @@
 scale_fill_UrgAra(palette = "main", discrete = TRUE, reverse = FALSE, ...)
 }
 \arguments{
-\item{palette}{Character name of palette in drsimonj_palettes}
+\item{palette}{Character name of palette in UrgAra_palettes (main or duo)}
 
 \item{discrete}{Boolean indicating whether color aesthetic is discrete or not}
 
