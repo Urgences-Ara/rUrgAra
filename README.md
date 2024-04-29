@@ -27,5 +27,5 @@ devtools::install_github("https://github.com/CC-URGARA/rUrgAra", build_vignettes
 Exemples of use are available in the “Getting started” vignette
 
 ``` r
-vignette("Getting started", package = "rUrgAra")
+vignette("Getting-started", package = "rUrgAra")
 ```
