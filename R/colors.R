@@ -66,11 +66,11 @@ UrgAra_pal <- function(palette = "main", reverse = FALSE, ...) {
     vec_pal = unlist(pal[seq_len(n)])
 
     if(n > length(pal)){
-      warning(paste0("La palette sélectionnée contient ", length(pal), " couleurs.",
-                     "Les données contiennent ", n, " niveaux. Des valeurs pas défauts",
-                     " sont utilisées pour les niveaux en trop."))
+      warning(paste0("La palette s\u00e9lectionn\u00e9e contient ", length(pal), " couleurs.",
+                     "Les donn\u00e9es contiennent ", n, " niveaux. Des valeurs pas d\u00e9fauts",
+                     " sont utilis\u00e9es pour les niveaux en trop."))
       n_supp = n - length(pal)
-      vec_pal = append(vec_pal, rainbow(n_supp))
+      vec_pal = append(vec_pal, grDevices::rainbow(n_supp))
     }
     names(vec_pal) <- NULL
     return(vec_pal)
