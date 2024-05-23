@@ -45,7 +45,7 @@ UrgAra_cols <- function(...) {
 
 UrgAra_palettes <- list(
   `main` = UrgAra_cols("UrgAraBlue2", "UrgAraRed2", "UrgAraGreen", "UrgAraLightBlue",
-                       "UrgAraOrange", "UrgAraYellow", "UrgAraBrown",  "UrgAraPurple",
+                       "UrgAraOrange", "UrgAraYellow", "UrgAraPurple",
                        "UrgAraPink", "UrgAraGrey"),
   `duo` = UrgAra_cols("UrgAraBlue", "UrgAraRed")
 )
@@ -62,9 +62,16 @@ UrgAra_pal <- function(palette = "main", reverse = FALSE, ...) {
 
   if (reverse) pal <- rev(pal)
 
-  # grDevices::colorRampPalette(pal)(3)
   fun = function(n){
     vec_pal = unlist(pal[seq_len(n)])
+
+    if(n > length(pal)){
+      warning(paste0("La palette sélectionnée contient ", length(pal), " couleurs.",
+                     "Les données contiennent ", n, " niveaux. Des valeurs pas défauts",
+                     " sont utilisées pour les niveaux en trop."))
+      n_supp = n - length(pal)
+      vec_pal = append(vec_pal, rainbow(n_supp))
+    }
     names(vec_pal) <- NULL
     return(vec_pal)
   }
