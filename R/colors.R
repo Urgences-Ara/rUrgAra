@@ -17,7 +17,6 @@ UrgAra_colors <- list(
   `UrgAraGrey` = "#999999"
   )
 
-
 #' Extract any color from UrgAra globale palette
 #'
 #' @description Extract any color from UrgAra globale palette
@@ -50,69 +49,40 @@ UrgAra_palettes <- list(
   `duo` = UrgAra_cols("UrgAraBlue", "UrgAraRed")
 )
 
-
-#' Return function to interpolate an UrgAra color palette
+#' UrgAra color palette
 #'
-#' @param palette Character name of palette in UrgAra_palettes
-#' @param reverse Boolean indicating whether the palette should be reversed
-#' @param ... Additional arguments to pass to colorRampPalette()
+#' @description
+#' Returns a vector of colors of length n from UrgAra's color palette.
 #'
-UrgAra_pal <- function(palette = "main", reverse = FALSE, ...) {
-  pal <- UrgAra_palettes[[palette]]
-
-  if (reverse) pal <- rev(pal)
-
-  fun = function(n){
-    vec_pal = unlist(pal[seq_len(n)])
-
-    if(n > length(pal)){
-      warning(paste0("La palette s\u00e9lectionn\u00e9e contient ", length(pal), " couleurs.",
-                     "Les donn\u00e9es contiennent ", n, " niveaux. Des valeurs pas d\u00e9fauts",
-                     " sont utilis\u00e9es pour les niveaux en trop."))
-      n_supp = n - length(pal)
-      vec_pal = append(vec_pal, grDevices::rainbow(n_supp))
-    }
-    names(vec_pal) <- NULL
-    return(vec_pal)
-  }
-  return(fun)
-}
-
-
-#' Color scale constructor for UrgAra colors
 #'
-#' @param palette Character name of palette in UrgAra_palettes
-#' @param discrete Boolean indicating whether color aesthetic is discrete or not
-#' @param reverse Boolean indicating whether the palette should be reversed
-#' @param ... Additional arguments passed to discrete_scale() or
-#'            scale_color_gradientn(), used respectively when discrete is TRUE or FALSE
+#' @param n the number of colors to return
+#' @param palette The name of the palette. For more information rUrgAra:::UrgAra_palettes
 #'
+#' @return a vector
 #' @export
-scale_color_UrgAra <- function(palette = "main", discrete = TRUE, reverse = FALSE, ...) {
-  pal <- UrgAra_pal(palette = palette, reverse = reverse)
-
-  if (discrete) {
-    ggplot2::discrete_scale("colour", paste0("UrgAra_", palette), palette = pal, ...)
-  } else {
-    ggplot2::scale_color_gradientn(colours = pal(256), ...)
-  }
-}
-
-#' Fill scale constructor for drsimonj colors
 #'
-#' @param palette Character name of palette in UrgAra_palettes (main or duo)
-#' @param discrete Boolean indicating whether color aesthetic is discrete or not
-#' @param reverse Boolean indicating whether the palette should be reversed
-#' @param ... Additional arguments passed to discrete_scale() or
-#'            scale_fill_gradientn(), used respectively when discrete is TRUE or FALSE
+#' @examples
+#' library(rUrgAra)
+#' library(ggplot2)
+#' ggplot(mtcars, aes(mpg, wt)) +
+#'   geom_point(aes(colour = factor(cyl))) +
+#'   scale_colour_manual(values = pal_UrgAra())
 #'
-#' @export
-scale_fill_UrgAra <- function(palette = "main", discrete = TRUE, reverse = FALSE, ...) {
-  pal <- UrgAra_pal(palette = palette, reverse = reverse)
+pal_UrgAra <- function(n = NULL, palette = "main"){
+  #extraction of the color palette
+  col_pal <- UrgAra_palettes[[palette]] %>% unlist %>% unname
 
-  if (discrete) {
-    ggplot2::discrete_scale("fill", paste0("UrgAra_", palette), palette = pal, ...)
-  } else {
-    ggplot2::scale_fill_gradientn(colours = pal(256), ...)
+  #check
+  if(is.null(col_pal)){stop(paste0("The color palette ", palette, " is not a valid rUrgAra palette. ",
+                                   "Available palettes are : ", paste(names(UrgAra_palettes), collapse = ", ")))}
+
+  #first n values
+  if(!is.null(n)){
+    if(n < 0 | n > length(col_pal) | n %% 1 != 0){stop(paste0("n must be a positive interger lower than ", length(col_pal) + 1))}
+    col_pal <- col_pal[seq_len(n)]
   }
-}
+
+  return(col_pal)
+  }
+
+

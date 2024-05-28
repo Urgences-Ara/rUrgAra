@@ -86,7 +86,7 @@ plot_iris = ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y =  Sepal.Widt
 plot_iris#default
 
 plot_iris +
-  scale_color_UrgAra() +#Urg'Ara's color palette
+  ggplot2::scale_color_manual(values = pal_UrgAra()) +#Urg'Ara's color palette
   ggpubr::theme_pubclean() +
   ggplot2::theme(legend.key = ggplot2::element_blank())
 ```
@@ -101,7 +101,7 @@ plot_iris_bar = ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y =  Sepal.
 plot_iris_bar#default
 
 plot_iris_bar +
-  scale_fill_UrgAra() +#Urg'Ara's color palette
+  ggplot2::scale_fill_manual(values = pal_UrgAra()) +#Urg'Ara's color palette
   ggpubr::theme_pubclean()
 ```
 
@@ -115,6 +115,6 @@ plot_iris_dicho = ggplot2::ggplot(iris, ggplot2::aes(x = 1, y =  Sepal.Width, fi
 plot_iris_dicho#default
 
 plot_iris_dicho +
-  scale_fill_UrgAra(palette = "duo") +#Urg'Ara's color palette
+  ggplot2::scale_fill_manual(values = pal_UrgAra(palette = "duo")) +#Urg'Ara's color palette
   ggpubr::theme_pubclean()
 ```

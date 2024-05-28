@@ -1,5 +1,5 @@
 Binding: create_project
-Title: Create project wirh rUrgAra
+Title: Create project with rUrgAra
 
 Parameter: project_type
 Widget: SelectInput
