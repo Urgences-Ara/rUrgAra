@@ -31,9 +31,6 @@
     <loc>/reference/UrgAra_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/UrgAra_pal.html</loc>
-  </url>
-  <url>
     <loc>/reference/UrgAra_palettes.html</loc>
   </url>
   <url>
@@ -41,6 +38,9 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pal_UrgAra.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
@@ -53,11 +53,5 @@
   </url>
   <url>
     <loc>/reference/rUrgAra-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_color_UrgAra.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scale_fill_UrgAra.html</loc>
   </url>
 </urlset>
