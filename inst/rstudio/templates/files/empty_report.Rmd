@@ -20,7 +20,12 @@ knitr::opts_chunk$set(warning = FALSE)#silent
 knitr::opts_chunk$set(message = FALSE)#silent
 ```
 
-<!-- Skip the title page to insert custom made title page later -->
+```{r lib, include=FALSE}
+#Load any library needed here
+```
+
+
+<!-- Skips the title page to insert custom made title page later -->
 
 ---
   title: "&nbsp;"
@@ -32,6 +37,11 @@ knitr::opts_chunk$set(message = FALSE)#silent
 
 ```{r, fig.width=8.3, fig.height=11.7}
 # Insert here your code for a custom title page
+img <- png::readPNG("img_path.png")#upload an image .png (see also : jpeg package)
+                   
+ggplot2::ggplot(dplyr::tibble()) +
+  ggpubr::background_image(img) +
+  ggplot2::theme_void()
 ```
 
 \newgeometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
