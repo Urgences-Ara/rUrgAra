@@ -2,7 +2,10 @@
 
 export("%>%")
 export(UrgAra_cols)
+export(clean_FINESS)
+export(get_template)
 export(pal_UrgAra)
 export(plot_add_logo)
 export(plot_diag_charge)
+importFrom(dplyr,if_else)
 importFrom(magrittr,"%>%")

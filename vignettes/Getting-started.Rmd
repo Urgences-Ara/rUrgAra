@@ -58,6 +58,12 @@ list_charge_stratified = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
                                           max_LOS = 72*60)
 list_charge_stratified$plot + 
   ggplot2::labs(title = "From 10/01/2022 to 20/01/2022")
+
+#Hiding the number of entry/exit
+list_charge_no_lines = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
+                                          exit = "SORTIE", strata = "Etablissement",
+                                          show_lines = FALSE)
+list_charge_no_lines$plot
 ```
 
 # Adding a company logo to a plot
@@ -118,3 +124,14 @@ plot_iris_dicho +
   ggplot2::scale_fill_manual(values = pal_UrgAra(palette = "duo")) +#Urg'Ara's color palette
   ggpubr::theme_pubclean()
 ```
+
+
+## Importing templates from rUrgAra
+
+You can import a template from rUrgAra using get_template
+
+```{r, eval = F}
+get_template(template_name = "report", folder = "src/")
+```
+
+

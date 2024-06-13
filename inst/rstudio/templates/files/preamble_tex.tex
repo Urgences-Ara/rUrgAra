@@ -64,6 +64,21 @@
   }
 }
 
+
+\newcommand{\makesubsectionnoicon}[2]{%création d'un titre dans un bandeau {titre}{couleur}
+  \fboxsep0pt
+  \hspace{-1cm}
+  \colorbox{#2}{\hspace{1cm}\begin{minipage}[t][1cm][t]{20cm}
+    \vspace{-0.5cm}\hspace{1.1cm}\subsection{#1}
+    {\Large
+      \vspace{-1.7\baselineskip} % move up
+      \hspace{0.5cm}
+      \vspace{1.2\baselineskip}
+      }
+    \end{minipage}
+  }
+}
+
 %création du footer
 \def\companylogo{\includegraphics[width=\linewidth,height=70pt,keepaspectratio]{../img/logo_urgara_minimal.jpg}}
 \fancypagestyle{companypagestyle}

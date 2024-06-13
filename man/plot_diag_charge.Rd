@@ -11,7 +11,8 @@ plot_diag_charge(
   strata = NULL,
   from = NULL,
   to = NULL,
-  max_LOS = Inf
+  max_LOS = Inf,
+  show_lines = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ plot_diag_charge(
 \item{to}{The end of the time frame to consider (dmy). Number of patients will be averaged over the number of days between "from" and "to" and exit date/times will be truncated at "to". Default value is the maximum date in the exit column.}
 
 \item{max_LOS}{Maximum length of stay for patients in minutes. Patients with durations longer than max_LOS will be considered as having missing length of stay.}
+
+\item{show_lines}{Should the number of entry/exit be plotted ? Default is TRUE.}
 }
 \value{
 A list. tab contains the table used to make the charge diagram. H_entry = "-1" for patients entered the day before. plot contains the charge diagram.
@@ -40,7 +43,7 @@ library(rUrgAra)
 #Table of entry/exit times
 head(df_ex_charge)
 #Charge diagram with exclusion of patients staying more than 3 days (72*60 = 4320 minutes)
-# not taking into account strata 
+# not taking into account strata
 list_charge = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
                                exit = "SORTIE", max_LOS = 72*60)
 #plot_diag_charge return two objects, a table showing for each hour of

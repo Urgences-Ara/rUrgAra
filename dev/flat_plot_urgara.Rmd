@@ -6,17 +6,19 @@ editor_options:
 ---
 
 ```{r development, include=FALSE}
-library(testthat)
+#DO NOT RUN THIS SCRIPT
+# library(testthat)
 ```
 
 ```{r development-load}
 # Load already included functions if relevant
-pkgload::load_all(export_all = FALSE)
-fusen::load_flat_functions()
+# pkgload::load_all(export_all = FALSE)
+# fusen::load_flat_functions()
 ```
 
 ```{r development-inflat}
-fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = NA, open_vignette = F)
+#FUSEN IS NOT USED ANYMORE. RUNNING THIS SCRIPT WOULD ERASE FUNCTIONS
+# fusen::inflate(flat_file = "dev/flat_plot_urgara.Rmd", vignette_name = NA, open_vignette = F)
 ```
 
 # Exemple dataset
