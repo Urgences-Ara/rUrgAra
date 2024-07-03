@@ -19,7 +19,7 @@ You can install the development version of rUrgAra from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("https://github.com/CC-URGARA/rUrgAra", build_vignettes = T)
+devtools::install_github("https://github.com/Urgences-Ara/rUrgAra", build_vignettes = T)
 ```
 
 ## Example
