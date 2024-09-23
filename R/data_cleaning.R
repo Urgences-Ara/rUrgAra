@@ -62,3 +62,29 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
 
   return(merged_var)
 }
+
+
+
+
+
+
+#' Controle values in a variable
+#'
+#' @param var Variable to check
+#' @param val_autor Vector of authorized values
+#' @param lab The name of the variable (only used to print the number of removed values)
+#'
+#' @return A vector with NA left as NA and values outside of "val_autor" transformed into "NC" (Not conform)
+#' @export
+#'
+#' @examples
+#' var = c(NA, LETTERS[1:5]]
+#' fct_format_control(var, val_autor = c("A", "C", "F"), lab = "lettres")
+#'
+fct_format_control <- function(var, val_autor, lab){
+  var_ok = ifelse(is.na(var), NA,
+                  ifelse(!var %in% val_autor, "NC", var))
+  n_corrige = sum(var_ok %in% "NC")
+  if(n_corrige != 0){warning(paste(n_corrige, "formats corrig\u00e9s pour la variable", lab))}
+  return(var_ok)
+}
