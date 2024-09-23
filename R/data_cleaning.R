@@ -62,20 +62,3 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
 
   return(merged_var)
 }
-
-
-
-data = data.frame(
-  ID = 1:40,
-  nom_etab01 = c(rep(NA, 30), sample(LETTERS[1:10], 10, replace = T)),
-  nom_etab03 = c(rep(NA, 20), sample(LETTERS[1:10], 10, replace = T), rep(NA, 10)),
-  nom_etab07 = c(rep(NA, 10), sample(LETTERS[1:10], 10, replace = T), rep(NA, 20)),
-  nom_des_etab_du38 =  c(sample(LETTERS[1:10], 10, replace = T), rep(NA, 30)),
-  age =  sample(75:95, 40, replace = T)
-  )
-
-# var = "nom_des_etab_du38"
-# prefix = "nom_etab"
-# exclude = "nom_etab07"
-data$etab = merge_complementary_variables(data,prefix = "nom_etab", var = "nom_des_etab_du38", exclude = "nom_etab07")
-
