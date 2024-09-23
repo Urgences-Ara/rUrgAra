@@ -20,7 +20,7 @@ A vector with NA left as NA and values outside of "val_autor" transformed into "
 Controle values in a variable
 }
 \examples{
-var = c(NA, LETTERS[1:5]]
+var = c(NA, LETTERS[1:5])
 fct_format_control(var, val_autor = c("A", "C", "F"), lab = "lettres")
 
 }

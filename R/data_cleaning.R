@@ -78,7 +78,7 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
 #' @export
 #'
 #' @examples
-#' var = c(NA, LETTERS[1:5]]
+#' var = c(NA, LETTERS[1:5])
 #' fct_format_control(var, val_autor = c("A", "C", "F"), lab = "lettres")
 #'
 fct_format_control <- function(var, val_autor, lab){
