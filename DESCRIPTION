@@ -19,6 +19,7 @@ Imports:
     magrittr,
     RColorBrewer,
     scales,
+    stats,
     stringr,
     tibble,
     tidyr

@@ -1,0 +1,81 @@
+#' Merge complementary variables
+#'
+#' @description
+#' Merges multiple variables that are mutually exclusive into a single variables. Use either a complete list of variables to merge or the prefix of variables to merge or both.
+#'
+#' @param data A data.frame or tibble containing variables to merge
+#' @param var char vector containing the name of variables to merge in data
+#' @param prefix char vector containing the prefix. Every column in data starting with the prefix will be merged
+#' @param exclude char vector of variables to exclude from the merge
+#' @param info Boolean to print or not the merged variables and number of NA in the console
+#'
+#' @return A variable containing merged values from each column
+#' @export
+#'
+#' @importFrom dplyr select starts_with all_of
+#' @importFrom stats na.omit
+#'
+#' @examples
+#' \dontrun{
+#' library(rUrgAra)
+#' data = data.frame(
+#' ID = 1:40,
+#' nom_etab01 = c(rep(NA, 30), sample(LETTERS[1:10], 10, replace = TRUE)),
+#' nom_etab03 = c(rep(NA, 20), sample(LETTERS[1:10], 10, replace = TRUE), rep(NA, 10)),
+#' nom_etab_dechocage = c(rep(NA, 10), sample(LETTERS[1:10], 10, replace = TRUE), rep(NA, 20)),
+#' nom_des_etab_du38 =  c(sample(LETTERS[1:10], 10, replace = TRUE), rep(NA, 30)),
+#' age =  sample(75:95, 40, replace = T)
+#' )
+#'
+#' data$etab = merge_complementary_variables(data,prefix = "nom_etab", var = "nom_des_etab_du38", exclude = "nom_etab_dechocage",
+#'                                           info = TRUE)
+#' data
+#' }
+#'
+merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclude = NULL, info = TRUE){
+  #selecting the table to merge
+  merge_table = data |>
+    select(starts_with(prefix), all_of(var)) |>
+    select(-all_of(exclude))
+
+  #check whether the variables are complementary
+  nb_noNA = apply(merge_table, 1, function(row){sum(!is.na(row))})
+  if(any(nb_noNA > 1)){
+    stop(paste0("Multiple values are filled for selected variables on rows : ", paste(which(nb_noNA > 1), collapse = " ")))
+  }
+
+  #user information
+  if(info){cat("The following variables will be merged :", paste(names(merge_table)), "\n")}
+
+  #merge
+  merged_var = apply(merge_table, 1, function(row){
+    if(all(is.na(row))){
+      return(NA)
+    } else {
+      return(na.omit(row))
+    }
+  })
+
+  n_NA = sum(is.na(merged_var))
+
+  if(info){cat("The merged variable contains", n_NA, "missing value(s)", "\n")}
+
+  return(merged_var)
+}
+
+
+
+data = data.frame(
+  ID = 1:40,
+  nom_etab01 = c(rep(NA, 30), sample(LETTERS[1:10], 10, replace = T)),
+  nom_etab03 = c(rep(NA, 20), sample(LETTERS[1:10], 10, replace = T), rep(NA, 10)),
+  nom_etab07 = c(rep(NA, 10), sample(LETTERS[1:10], 10, replace = T), rep(NA, 20)),
+  nom_des_etab_du38 =  c(sample(LETTERS[1:10], 10, replace = T), rep(NA, 30)),
+  age =  sample(75:95, 40, replace = T)
+  )
+
+# var = "nom_des_etab_du38"
+# prefix = "nom_etab"
+# exclude = "nom_etab07"
+data$etab = merge_complementary_variables(data,prefix = "nom_etab", var = "nom_des_etab_du38", exclude = "nom_etab07")
+
