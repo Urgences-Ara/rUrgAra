@@ -45,7 +45,7 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
   }
 
   #user information
-  if(info){cat("The following variables will be merged :", paste(names(merge_table)), "\n")}
+  if(info){message("The following variables will be merged : ", paste(names(merge_table), collapse = " "))}
 
   #merge
   merged_var = apply(merge_table, 1, function(row){
@@ -58,7 +58,7 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
 
   n_NA = sum(is.na(merged_var))
 
-  if(info){cat("The merged variable contains", n_NA, "missing value(s)", "\n")}
+  if(info){message("The merged variable contains ", n_NA, " missing value(s)")}
 
   return(merged_var)
 }
