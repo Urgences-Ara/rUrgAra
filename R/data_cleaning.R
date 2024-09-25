@@ -73,6 +73,7 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
 #' @param var Variable to check
 #' @param val_autor Vector of authorized values
 #' @param lab The name of the variable (only used to print the number of removed values)
+#' @param replacement Value to replace "Non conform" modalities with. "NC" is used by default.
 #'
 #' @return A vector with NA left as NA and values outside of "val_autor" transformed into "NC" (Not conform)
 #' @export
@@ -81,10 +82,12 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
 #' var = c(NA, LETTERS[1:5])
 #' fct_format_control(var, val_autor = c("A", "C", "F"), lab = "lettres")
 #'
-fct_format_control <- function(var, val_autor, lab){
+fct_format_control <- function(var, val_autor, lab, replacement = "NC"){
+  n_NA_before = sum(is.na(var))
   var_ok = ifelse(is.na(var), NA,
-                  ifelse(!var %in% val_autor, "NC", var))
-  n_corrige = sum(var_ok %in% "NC")
+                  ifelse(!var %in% val_autor, replacement, var))
+  n_corrige = sum(var_ok %in% replacement)
+  if(is.na(replacement)){n_corrige = n_corrige - n_NA_before}
   if(n_corrige != 0){warning(paste(n_corrige, "formats corrig\u00e9s pour la variable", lab))}
   return(var_ok)
 }

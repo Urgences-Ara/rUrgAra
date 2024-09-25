@@ -4,7 +4,7 @@
 \alias{fct_format_control}
 \title{Controle values in a variable}
 \usage{
-fct_format_control(var, val_autor, lab)
+fct_format_control(var, val_autor, lab, replacement = "NC")
 }
 \arguments{
 \item{var}{Variable to check}
@@ -12,6 +12,8 @@ fct_format_control(var, val_autor, lab)
 \item{val_autor}{Vector of authorized values}
 
 \item{lab}{The name of the variable (only used to print the number of removed values)}
+
+\item{replacement}{Value to replace "Non conform" modalities with. "NC" is used by default.}
 }
 \value{
 A vector with NA left as NA and values outside of "val_autor" transformed into "NC" (Not conform)
