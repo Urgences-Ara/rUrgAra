@@ -41,8 +41,8 @@ nom_des_etab_du38 =  c(sample(LETTERS[1:10], 10, replace = TRUE), rep(NA, 30)),
 age =  sample(75:95, 40, replace = T)
 )
 
-data$etab = merge_complementary_variables(data,prefix = "nom_etab", var = "nom_des_etab_du38", exclude = "nom_etab_dechocage",
-                                          info = TRUE)
+data$etab = merge_complementary_variables(data,prefix = "nom_etab", var = "nom_des_etab_du38",
+                                          exclude = "nom_etab_dechocage", info = TRUE)
 data
 }
 
