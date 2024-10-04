@@ -4,10 +4,14 @@
 \alias{clean_commune}
 \title{Clean French commune names}
 \usage{
-clean_commune(commune, CP = NULL)
+clean_commune(commune, CP = NULL, info = TRUE)
 }
 \arguments{
-\item{char}{A character vector containing CP numbers}
+\item{commune}{char A character vector containing commune names.}
+
+\item{CP}{char A character vector containing CP numbers}
+
+\item{info}{Boolean to print or not the number of recoded values}
 }
 \value{
 A character vector containing the commune names in the INSEE format
@@ -17,5 +21,5 @@ Clean a vector a character containing commune names in free text to INSEE format
 }
 \examples{
 library(rUrgAra)
-clean_commune(c("La tronche", "st-etienne", "Saint     Etienne", "Saint-étienne"))
+clean_commune(c("La tronche", "st-etienne", "Saint     Étienne", "Saint-étienne"))
 }

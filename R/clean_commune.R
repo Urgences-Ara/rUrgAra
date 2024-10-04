@@ -3,8 +3,9 @@
 #' @description
 #' Clean a vector a character containing commune names in free text to INSEE format
 #'
-#' @param char A character vector containing commune names.
-#' @param char A character vector containing CP numbers
+#' @param commune char A character vector containing commune names.
+#' @param CP char A character vector containing CP numbers
+#' @param info Boolean to print or not the number of recoded values
 #'
 #' @return A character vector containing the commune names in the INSEE format
 #' @export
@@ -13,8 +14,8 @@
 #'
 #' @examples
 #' library(rUrgAra)
-#' clean_commune(c("La tronche", "st-etienne", "Saint     Etienne", "Saint-étienne"))
-clean_commune <- function(commune, CP = NULL){
+#' clean_commune(c("La tronche", "st-etienne", "Saint     Étienne", "Saint-étienne"))
+clean_commune <- function(commune, CP = NULL, info = TRUE){
   commune_propre = commune
   #Recodage général
   commune_propre = toupper(trimws(commune_propre))
@@ -23,7 +24,7 @@ clean_commune <- function(commune, CP = NULL){
   commune_propre = str_replace_all(commune_propre, "(?<![A-Z])MT[- ]", "MONT ")
   commune_propre = str_replace_all(commune_propre, "\\/", " SUR ")
   commune_propre = str_replace_all(commune_propre, "S\\/", " SUR ")
-  commune_propre = str_replace_all(commune_propre, "[\\'\\-\\`]", " ")
+  commune_propre = str_replace_all(commune_propre, "[\\\'\\-\\`]", " ")
   commune_propre = str_replace_all(commune_propre, " {2,}", " ")
   commune_propre = str_remove_all(commune_propre, "[0-9]{3,}")
   commune_propre = str_remove_all(commune_propre, " CEDEX(?![A-Z])")
@@ -53,6 +54,13 @@ clean_commune <- function(commune, CP = NULL){
 
   #Cas spécifiques
   commune_propre = str_replace_all(commune_propre, "LYON0$", "LYON")
+
+
+  #Information utilisateur
+  if(info){
+    n_modif = sum(commune != commune_propre, na.rm = T)
+    message(paste0(n_modif, " communes ont \u00e9t\u00e9 recod\u00e9es"))
+  }
 
   #return
   return(commune_propre)
