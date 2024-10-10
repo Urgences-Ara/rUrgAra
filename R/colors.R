@@ -14,7 +14,12 @@ UrgAra_colors <- list(
   `UrgAraYellow` = "#FFFF33",
   `UrgAraPurple` = "#d084db",
   `UrgAraPink` = "#F781BF",
-  `UrgAraGrey` = "#999999"
+  `UrgAraGrey` = "#999999",
+  `UrgAraDarkGrey` = "#767171",
+  `UrgAraDarkGreen` = "#548235",
+  `UrgAraBrown` = "#843C0C",
+  `UrgAraDeepPurple` = "#893BC3",
+  `UrgAraCyan` = "#00FFCC"
   )
 
 #' Extract any color from UrgAra globale palette
@@ -45,7 +50,8 @@ UrgAra_cols <- function(...) {
 UrgAra_palettes <- list(
   `main` = UrgAra_cols("UrgAraBlue2", "UrgAraRed2", "UrgAraGreen", "UrgAraLightBlue",
                        "UrgAraOrange", "UrgAraYellow", "UrgAraPurple",
-                       "UrgAraPink", "UrgAraGrey"),
+                       "UrgAraPink", "UrgAraGrey", "UrgAraDarkGreen", "UrgAraBrown",
+                       "UrgAraDeepPurple", "UrgAraCyan", "UrgAraDarkGrey"),
   `duo` = UrgAra_cols("UrgAraBlue", "UrgAraRed")
 )
 
