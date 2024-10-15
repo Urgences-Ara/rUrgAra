@@ -10,7 +10,7 @@
 #' @return A character vector containing the commune names in the INSEE format
 #' @export
 #'
-#' @importFrom stringr str_replace_all str_remove_all
+#' @importFrom stringr str_replace_all str_remove_all str_remove str_replace
 #'
 #' @examples
 #' library(rUrgAra)
@@ -24,7 +24,7 @@ clean_commune <- function(commune, CP = NULL, info = TRUE){
   commune_propre = str_replace_all(commune_propre, "(?<![A-Z])MT[- ]", "MONT ")
   commune_propre = str_replace_all(commune_propre, "\\/", " SUR ")
   commune_propre = str_replace_all(commune_propre, "S\\/", " SUR ")
-  commune_propre = str_replace_all(commune_propre, "[\\\'\\-\\`\\.\\’]", " ")
+  commune_propre = str_replace_all(commune_propre, "[\\\'\\-\\`\\.\\\u2019]", " ")
   commune_propre = str_remove_all(commune_propre, "\\(.*\\)")
   commune_propre = str_replace_all(commune_propre, " {2,}", " ")
   commune_propre = str_remove_all(commune_propre, "[0-9]{3,}")
