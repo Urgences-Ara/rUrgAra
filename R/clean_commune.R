@@ -24,7 +24,8 @@ clean_commune <- function(commune, CP = NULL, info = TRUE){
   commune_propre = str_replace_all(commune_propre, "(?<![A-Z])MT[- ]", "MONT ")
   commune_propre = str_replace_all(commune_propre, "\\/", " SUR ")
   commune_propre = str_replace_all(commune_propre, "S\\/", " SUR ")
-  commune_propre = str_replace_all(commune_propre, "[\\\'\\-\\`]", " ")
+  commune_propre = str_replace_all(commune_propre, "[\\\'\\-\\`\\.\\’]", " ")
+  commune_propre = str_remove_all(commune_propre, "\\(.*\\)")
   commune_propre = str_replace_all(commune_propre, " {2,}", " ")
   commune_propre = str_remove_all(commune_propre, "[0-9]{3,}")
   commune_propre = str_remove_all(commune_propre, " CEDEX(?![A-Z])")
@@ -54,6 +55,9 @@ clean_commune <- function(commune, CP = NULL, info = TRUE){
 
   #Cas spécifiques
   commune_propre = str_replace_all(commune_propre, "LYON0$", "LYON")
+  commune_propre = str_replace(commune_propre, "ANNECY LE VIEUX", "ANNECY")
+  commune_propre = str_remove(commune_propre, "E ARRONDISSEMENT")
+  commune_propre = str_replace(commune_propre, "LYON (?=[0-9])", "LYON 0")
 
 
   #Information utilisateur
