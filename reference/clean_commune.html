@@ -69,8 +69,7 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">rUrgAra</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">clean_commune</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"La tronche"</span>, <span class="st">"st-etienne"</span>, <span class="st">"Saint     Étienne"</span>, <span class="st">"Saint-étienne"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 4 communes ont été recodées</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LA TRONCHE"    "SAINT ETIENNE" "SAINT ETIENNE" "SAINT ETIENNE"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in str_replace(commune_propre, "ANNECY LE VIEUX", "ANNECY"):</span> could not find function "str_replace"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
