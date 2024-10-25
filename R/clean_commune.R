@@ -46,7 +46,7 @@ clean_commune <- function(commune, CP = NULL, info = TRUE){
 
   #Recodage à partir du CP
   if(!is.null(CP)){
-    if(length(commune != length(CP))){stop("Commune et CP doivent faire la m\u00eame longueur")}
+    if(length(commune_propre) != length(CP)){stop("Commune et CP doivent faire la m\u00eame longueur")}
     commune_propre = if_else(CP %in% "69001", "LYON 01", commune_propre)
     commune_propre = if_else(CP %in% "69002", "LYON 02", commune_propre)
     commune_propre = if_else(CP %in% "69003", "LYON 03", commune_propre)
