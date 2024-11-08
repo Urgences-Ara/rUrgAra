@@ -12,11 +12,13 @@ Depends:
 Imports: 
     cowplot,
     dplyr,
+    forcats,
     ggplot2,
     ggpubr,
     lubridate,
     magick,
     magrittr,
+    purrr,
     RColorBrewer,
     scales,
     stats,
