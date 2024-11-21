@@ -12,7 +12,7 @@
 #' @return A variable containing merged values from each column
 #' @export
 #'
-#' @importFrom dplyr select starts_with all_of
+#' @importFrom dplyr select starts_with all_of any_of
 #' @importFrom stats na.omit
 #'
 #' @examples
@@ -27,16 +27,21 @@
 #' age =  sample(75:95, 40, replace = T)
 #' )
 #'
-#' data$etab = merge_complementary_variables(data,prefix = "nom_etab", var = "nom_des_etab_du38",
+#' data$etab = merge_complementary_variables(data, prefix = "nom_etab", var = "nom_des_etab_du38",
 #'                                           exclude = "nom_etab_dechocage", info = TRUE)
 #' data
 #' }
 #'
 merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclude = NULL, info = TRUE){
+  #Selection variables matching on prefix
+  if(!is.null(prefix)){#starts_with ne fonctionne pas avec NULL => Création d'un vec pour utiliser all_of
+    list_var_prefix = grep(paste0("^", prefix), names(data),
+                           value = T)} else {list_var_prefix = NULL}
+
   #selecting the table to merge
   merge_table = data |>
-    select(starts_with(prefix), all_of(var)) |>
-    select(-all_of(exclude))
+    select(all_of(list_var_prefix), all_of(var)) |>
+    select(-any_of(exclude))
 
   #check whether the variables are complementary
   nb_noNA = apply(merge_table, 1, function(row){sum(!is.na(row))})

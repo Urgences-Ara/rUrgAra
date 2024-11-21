@@ -32,7 +32,9 @@ Le nettoyage de la base (valeurs autorisées) et le calcul de variables composit
 }
 \examples{
 \dontrun{
-#quality_list = check_RPU_quality(RPU, var_hospit = "hospit", var_duree_passage = "duree_passage", var_age = "age")
+#quality_list = check_RPU_quality(RPU, var_hospit = "hospit",
+#                                 var_duree_passage = "duree_passage",
+#                                 var_age = "age")
 #quality_list$n_etab#Nombre d'établissement dans l'export
 #quality_list$tab_remplissage#taux de remplissage par variable par établissement
 #quality_list$plot_hospit#Taux d'hospitalisation par établissement
