@@ -13,11 +13,7 @@ fct_plot_charge <- function(data, tab_charge, max_LOS, show_lines){
   pal1 <- RColorBrewer::brewer.pal(8, "Accent")
   pal2 <- RColorBrewer::brewer.pal(8, "Dark2")
   pal3 <- RColorBrewer::brewer.pal(8, "Set2")
-  if(tab_charge %>% dplyr::filter(.data$H_entry < 0) %>% dplyr::pull(.data$n) %>% sum > 0){#at least one patient from the day before => add black to the front of the palette
-    pal <- c("black", pal1, pal2, pal3)
-  } else {#if no patients are from the day before black is not used
-    pal <- c(pal1, pal2, pal3)
-  }
+  pal <- c("black", pal1, pal2, pal3)
 
   #plot rendering
   plot <- ggplot2::ggplot(tab_charge, ggplot2::aes()) +
