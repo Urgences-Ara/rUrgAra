@@ -12,6 +12,7 @@
 \usepackage{calc}
 % \usepackage{lscape}%pivote de contenu de la page
 \usepackage{pdflscape}%pivote la page entière
+\usepackage{tcolorbox}
 
 % Changement titre de la table of content
 \renewcommand{\contentsname}{Sommaire}
@@ -104,5 +105,17 @@
 }
 
 \pagestyle{companypagestyle}
+
+
+
+\newcommand{\avertissementBox}[1]{
+  \begin{tcolorbox}[
+  colback=blueUrgAra!5!white,
+  colframe=blueUrgAra,
+  title=Avertissement,
+  bottomrule=0.5pt,
+  leftrule=0.5pt,
+  rightrule=0.5pt]#1
+  \end{tcolorbox}}
 
 
