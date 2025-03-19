@@ -84,13 +84,13 @@ fct_tab_charge <- function(data, from, to, max_LOS){
   } else{n_strata = 1}
 
   #winsorisation of entry and exit to from and to
-  data$entry_corrected_fact = lubridate::date(data$dh_entry) < from
-  data$dh_entry_corrected = dplyr::if_else(data$entry_corrected_fact,
+  data$entry_winsorized_fact = lubridate::date(data$dh_entry) < from
+  data$dh_entry_corrected = dplyr::if_else(data$entry_winsorized_fact,
                                            lubridate::ymd_hms(paste(from, "00:00:00")),
                                            data$dh_entry)
 
-  data$exit_corrected_fact = lubridate::date(data$dh_exit) > to
-  data$dh_exit_corrected = dplyr::if_else(data$exit_corrected_fact,
+  data$exit_winsorized_fact = lubridate::date(data$dh_exit) > to
+  data$dh_exit_corrected = dplyr::if_else(data$exit_winsorized_fact,
                                           lubridate::ymd_hms(paste(to, "23:59:59")),
                                           data$dh_exit)
 
@@ -104,8 +104,8 @@ fct_tab_charge <- function(data, from, to, max_LOS){
       d_entry_corrected = lubridate::date(.data$dh_entry_corrected),
       d_exit_corrected = lubridate::date(.data$dh_exit_corrected)
     ) %>%
-    dplyr::select("entry_minute", "LOS", "entry_corrected_fact", "H_entry",
-                  "H_exit", "d_entry_corrected", "d_exit_corrected") %>%
+    dplyr::select("entry_minute", "LOS", "entry_winsorized_fact", "H_entry",
+                  "exit_winsorized_fact", "H_exit", "d_entry_corrected", "d_exit_corrected") %>%
     dplyr::mutate(exit_minute = .data$entry_minute + .data$LOS,
                   H_exit_comp = .data$exit_minute %/% 60,#hour of exit with 00h of entry day (can be over 23h59)
                   H_exit_corrected = dplyr::if_else(.data$d_entry_corrected < .data$d_exit_corrected, 23, as.numeric(.data$H_exit)),#winsorizing it to 23hxx
@@ -114,7 +114,7 @@ fct_tab_charge <- function(data, from, to, max_LOS){
                   nb_cycles = dplyr::if_else(.data$nb_cycles == 0 & .data$d_entry_corrected < .data$d_exit_corrected,
                                              1, .data$nb_cycles),#correct an edge case
                   H_exit_last_cycle = .data$H_exit,
-                  H_entry = dplyr::if_else(.data$entry_corrected_fact, -1, as.numeric(.data$H_entry)))
+                  H_entry = dplyr::if_else(.data$entry_winsorized_fact, -1, as.numeric(.data$H_entry)))
 
   #Number of "full cycles" to add (patient present from 00h01 to 23h59)
   nb_H24_add = data_interm  %>%
@@ -126,7 +126,8 @@ fct_tab_charge <- function(data, from, to, max_LOS){
   tab_full_day_supp <- tibble::tibble(
     H_entry = rep(-1, nb_H24_add),
     H_exit = rep(23, nb_H24_add),
-    exit_corrected_fact = 1
+    exit_corrected_fact = 1,
+    exit_winsorized_fact = 0
   ) %>%
     dplyr::mutate_all(as.numeric)
 
@@ -134,18 +135,19 @@ fct_tab_charge <- function(data, from, to, max_LOS){
   tab_final_day <- tibble::tibble(#ajout de x lignes correpsond à des passages -1 à "heure de sortie dernier cycle)
     H_entry = -1,
     H_exit = data_interm %>% dplyr::filter(.data$nb_cycles > 0) %>% dplyr::pull(.data$H_exit_last_cycle),
-    exit_corrected_fact = 0
+    exit_corrected_fact = 0,
+    exit_winsorized_fact = data_interm %>% dplyr::filter(.data$nb_cycles > 0) %>% dplyr::pull(.data$exit_winsorized_fact),
   ) %>%
     dplyr::mutate_all(as.numeric)
 
   #merge of full cycles, half cycles and first days
-  data_calc_charge = dplyr::bind_rows(data_interm %>% dplyr::select("H_entry", "H_exit" = "H_exit_corrected", "exit_corrected_fact"),
+  data_calc_charge = dplyr::bind_rows(data_interm %>% dplyr::select("H_entry", "H_exit" = "H_exit_corrected", "exit_corrected_fact", "exit_winsorized_fact"),
                                       tab_full_day_supp,
                                       tab_final_day)
 
   #Speed up following computation by merging indentical rows
   data_calc_charge_agreg = data_calc_charge %>%
-    dplyr::group_by(.data$H_entry, .data$H_exit, .data$exit_corrected_fact) %>%
+    dplyr::group_by(.data$H_entry, .data$H_exit, .data$exit_corrected_fact, .data$exit_winsorized_fact) %>%
     dplyr::count()
 
   #For each hour of the day, count the number of patient present from wich time of arrival (-1 = day before)
@@ -154,7 +156,8 @@ fct_tab_charge <- function(data, from, to, max_LOS){
       dplyr::filter((.data$H_entry < H & .data$H_exit >= H) |
                       (.data$H_entry == H -1 & .data$H_exit == H - 1 & .data$exit_corrected_fact == 0) |
                       (H == 1 & .data$H_entry == "-1" & .data$H_exit == 0) |#special case first hour
-                      (H == 24 & .data$exit_corrected_fact == 1)#special case last hour
+                      (H == 24 & .data$exit_corrected_fact == 1) |#special case last hour not an exit if still there the day after
+                      (H == 24 & .data$exit_winsorized_fact == 1)#special case last hour not an exit if still there the day after
                     ) %>%
       dplyr::group_by(.data$H_entry) %>%
       dplyr::summarise(n = sum(.data$n)) %>%
