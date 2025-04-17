@@ -9,8 +9,12 @@ plot_add_logo(
   logo = NULL,
   height = 0.1,
   width = 0.2,
+  height_qual = height * 3/4,
+  width_qual = width * 3/4,
   position = c("bottom right", "bottom", "bottom left", "top right", "top", "top left"),
-  remove.margin = TRUE
+  remove.margin = TRUE,
+  add_quality = FALSE,
+  quality_lvl = NULL
 )
 }
 \arguments{
@@ -22,15 +26,24 @@ plot_add_logo(
 
 \item{width}{The width of the logo in proportion of the graph (default 0.2)}
 
-\item{position}{The position of the logo. Possible values are "bottom right", "bottom", "bottom left", "top right", "top", "top left"}
+\item{height_qual}{The height of the logo deplaying data quality in proportion of the graph (height/1.33)}
+
+\item{width_qual}{The width of the logo in proportion of the graph (width/1.33)}
+
+\item{position}{The position of the logo. Possible values are "bottom right", "bottom", "bottom left", "top right", "top", "top left".}
 
 \item{remove.margin}{Should the margin of the plot be removed on the side of the logo for a more precise fit}
+
+\item{add_quality}{Boolean : Should a data quality indicator be added to the plot ? The position is determined automatically}
+
+\item{quality_lvl}{numeric : Exhaustivity of the data used in percent (between 0 and 100)}
 }
 \value{
 a ggplot2 object
 }
 \description{
-Adds a company logo (by default Urg'Ara) to a plot. A custom logo can be used by specifying a path to the logo
+Adds a company logo (by default Urg'Ara) to a plot. A custom logo can be used by specifying a path to the logo.
+Optionally a data quality indicator can also be added
 }
 \examples{
 library(rUrgAra)
@@ -42,4 +55,5 @@ plot_cars = ggplot(cars, ggplot2::aes(x = speed, y = dist)) +
 plot_add_logo(plot_cars)#default
 plot_add_logo(plot_cars, position = "top left")#logo at the top
 plot_add_logo(plot_cars, width = 0.4)#wider logo
+plot_add_logo(plot_cars, add_quality = TRUE, quality_lvl = 75)#information on data quality
 }
