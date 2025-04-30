@@ -1,6 +1,6 @@
 Package: rUrgAra
 Title: UrgAra Package For Internal Use
-Version: 1.0
+Version: 1.01
 Authors@R: 
     person("Clément", "Claustre", , "clement.claustre@urgences-ara.fr", role = c("aut", "cre"))
 Description: Package developped to facilitate reccurent actions for

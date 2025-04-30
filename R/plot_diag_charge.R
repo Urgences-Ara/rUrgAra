@@ -34,7 +34,6 @@ fct_plot_charge <- function(data, tab_charge, max_LOS, show_lines){
   if(show_lines){
     #computation of the number of entry/exit per hour
     tab_entry <- data %>%
-      dplyr::filter(.data$LOS < max_LOS) %>%
       dplyr::mutate(Hour = lubridate::hour(.data$dh_entry) + 1,
                     Hour = factor(.data$Hour, levels = c(1:24))) %>%
       dplyr::group_by(.data$Hour, .drop = F) %>%
@@ -46,7 +45,6 @@ fct_plot_charge <- function(data, tab_charge, max_LOS, show_lines){
       dplyr::ungroup()
 
     tab_exit <- data %>%
-      dplyr::filter(.data$LOS < max_LOS) %>%
       dplyr::mutate(Hour = lubridate::hour(.data$dh_exit) + 1,
                     Hour = factor(.data$Hour, levels = c(1:24))) %>%
       dplyr::group_by(.data$Hour, .drop = F) %>%
@@ -193,6 +191,7 @@ fct_tab_charge <- function(data, from, to, max_LOS){
 #' @param to The end of the time frame to consider (dmy). Number of patients will be averaged over the number of days between "from" and "to" and exit date/times will be truncated at "to". Default value is the maximum date in the exit column.
 #' @param max_LOS Maximum length of stay for patients in minutes. Patients with durations longer than max_LOS will be considered as having missing length of stay.
 #' @param show_lines Should the number of entry/exit be plotted ? Default is TRUE.
+#' @param outlier_handling How should values above max_LOS be handled. If outlier_handling = "cap" (default), these values will be replaced by max_LOS. If outlier_handling = "remove", these values will be removed
 #'
 #' @return A list. tab contains the table used to make the charge diagram. H_entry = "-1" for patients entered the day before. plot contains the charge diagram.
 #'
@@ -224,7 +223,7 @@ fct_tab_charge <- function(data, from, to, max_LOS){
 #'
 plot_diag_charge <- function(data, entry, exit, strata = NULL,
                              from = NULL, to = NULL, max_LOS = Inf,
-                             show_lines = TRUE){
+                             show_lines = TRUE, outlier_handling = c("cap", "remove")){
   #type check
   type_entry = dplyr::pull(data, entry) %>% class
   type_exit = dplyr::pull(data, exit) %>% class
@@ -272,11 +271,22 @@ plot_diag_charge <- function(data, entry, exit, strata = NULL,
   #Removing delays over max_LOS
   data$LOS = difftime(data$dh_exit, data$dh_entry, units = "mins")
   LOS_over = data$LOS > max_LOS
-  if(sum(data$LOS > max_LOS, na.rm = T) > 0){
-    warning(paste(sum(data$LOS > max_LOS, na.rm = T),
-                  "delays have been removed because of length of stay superior to",
-                  max_LOS, "minutes"))}
-  data = data %>% dplyr::filter(!LOS_over)
+
+  if(outlier_handling[1] == "cap"){
+    if(sum(LOS_over, na.rm = T) > 0){#outlier existent
+      warning(paste(sum(LOS_over, na.rm = T),
+                    "delays have been capped at", max_LOS ,"minutes because of length of stay superior to",
+                    max_LOS, "minutes"))}
+    data$dh_exit[LOS_over] <- data$dh_entry[LOS_over] + max_LOS*60
+    data = data %>% dplyr::filter(!LOS_over)
+  } else if(outlier_handling[1] == "remove"){
+    if(sum(LOS_over, na.rm = T) > 0){#outlier existent
+      warning(paste(sum(LOS_over, na.rm = T),
+                    "delays have been removed because of length of stay superior to",
+                    max_LOS, "minutes"))}
+    data = data %>% dplyr::filter(!LOS_over)
+  } else stop('outlier_handling must be "cap" or "remove"')
+
 
   #computation of the table of charge
   tab_charge <- fct_tab_charge(data = data, from = from, to = to, max_LOS = max_LOS)

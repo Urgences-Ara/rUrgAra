@@ -12,7 +12,8 @@ plot_diag_charge(
   from = NULL,
   to = NULL,
   max_LOS = Inf,
-  show_lines = TRUE
+  show_lines = TRUE,
+  outlier_handling = c("cap", "remove")
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ plot_diag_charge(
 \item{max_LOS}{Maximum length of stay for patients in minutes. Patients with durations longer than max_LOS will be considered as having missing length of stay.}
 
 \item{show_lines}{Should the number of entry/exit be plotted ? Default is TRUE.}
+
+\item{outlier_handling}{How should values above max_LOS be handled. If outlier_handling = "cap" (default), these values will be replaced by max_LOS. If outlier_handling = "remove", these values will be removed}
 }
 \value{
 A list. tab contains the table used to make the charge diagram. H_entry = "-1" for patients entered the day before. plot contains the charge diagram.
