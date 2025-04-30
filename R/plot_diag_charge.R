@@ -276,9 +276,9 @@ plot_diag_charge <- function(data, entry, exit, strata = NULL,
     if(sum(LOS_over, na.rm = T) > 0){#outlier existent
       warning(paste(sum(LOS_over, na.rm = T),
                     "delays have been capped at", max_LOS ,"minutes because of length of stay superior to",
-                    max_LOS, "minutes"))}
-    data$dh_exit[LOS_over] <- data$dh_entry[LOS_over] + max_LOS*60
-    data = data %>% dplyr::filter(!LOS_over)
+                    max_LOS, "minutes"))
+      data$dh_exit[LOS_over %in% TRUE] <- data$dh_entry[LOS_over %in% TRUE] + max_LOS*60
+      }
   } else if(outlier_handling[1] == "remove"){
     if(sum(LOS_over, na.rm = T) > 0){#outlier existent
       warning(paste(sum(LOS_over, na.rm = T),
