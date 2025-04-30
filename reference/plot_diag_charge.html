@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rUrgAra</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.01</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,8 @@
 <span>  from <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  to <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  max_LOS <span class="op">=</span> <span class="cn">Inf</span>,</span>
-<span>  show_lines <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  show_lines <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  outlier_handling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cap"</span>, <span class="st">"remove"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -87,6 +88,10 @@
 
 <dt id="arg-show-lines">show_lines<a class="anchor" aria-label="anchor" href="#arg-show-lines"></a></dt>
 <dd><p>Should the number of entry/exit be plotted ? Default is TRUE.</p></dd>
+
+
+<dt id="arg-outlier-handling">outlier_handling<a class="anchor" aria-label="anchor" href="#arg-outlier-handling"></a></dt>
+<dd><p>How should values above max_LOS be handled. If outlier_handling = "cap" (default), these values will be replaced by max_LOS. If outlier_handling = "remove", these values will be removed</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -159,7 +164,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>
