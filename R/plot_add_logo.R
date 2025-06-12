@@ -41,7 +41,7 @@ plot_add_logo <- function(plot, logo = NULL,
     stop("Height and width must be numerical")} else
       if(!dplyr::between(height, 0, 1) | !dplyr::between(width, 0, 1) |
          !dplyr::between(height_qual, 0, 1) | !dplyr::between(width_qual, 0, 1)){
-        stop("Height and width myst be between 0 and 1")
+        stop("Height and width must be between 0 and 1")
       }
   if(!is.character(position)){stop("position must be a character vector")} else
     if(!position[1] %in% c("bottom right", "bottom", "bottom left",
