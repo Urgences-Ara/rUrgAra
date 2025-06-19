@@ -14,7 +14,8 @@ plot_add_logo(
   position = c("bottom right", "bottom", "bottom left", "top right", "top", "top left"),
   remove.margin = TRUE,
   add_quality = FALSE,
-  quality_lvl = NULL
+  quality_lvl = NULL,
+  geometry_logo = "200x"
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ plot_add_logo(
 \item{add_quality}{Boolean : Should a data quality indicator be added to the plot ? The position is determined automatically}
 
 \item{quality_lvl}{numeric : Exhaustivity of the data used in percent (between 0 and 100)}
+
+\item{geometry_logo}{char : Argument geometry utilisé dans magick::image_resize. geometry = "200x" par défaut}
 }
 \value{
 a ggplot2 object

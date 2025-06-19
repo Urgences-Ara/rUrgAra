@@ -13,6 +13,7 @@
 #' @param remove.margin Should the margin of the plot be removed on the side of the logo for a more precise fit
 #' @param add_quality Boolean : Should a data quality indicator be added to the plot ? The position is determined automatically
 #' @param quality_lvl numeric : Exhaustivity of the data used in percent (between 0 and 100)
+#' @param geometry_logo char : Argument geometry utilisé dans magick::image_resize. geometry = "200x" par défaut
 #'
 #' @return a ggplot2 object
 #'
@@ -34,7 +35,8 @@ plot_add_logo <- function(plot, logo = NULL,
                           position = c("bottom right", "bottom", "bottom left",
                                        "top right", "top", "top left"),
                           remove.margin = TRUE,
-                          add_quality = FALSE, quality_lvl = NULL
+                          add_quality = FALSE, quality_lvl = NULL,
+                          geometry_logo = "200x"
                           ){
   #type check
   if(!is.numeric(height) | !is.numeric(width) | !is.numeric(height_qual) | !is.numeric(width_qual)){
@@ -75,7 +77,8 @@ plot_add_logo <- function(plot, logo = NULL,
 
   #loading of the logo
   if(is.null(logo)){logo = system.file("img/logo_urgara.jpg", package = "rUrgAra")}
-  logo_img = magick::image_read(logo)
+  logo_img = magick::image_read(logo) %>%
+    magick::image_resize(geometry_logo, filter = "Triangle") # Optionnel : filtre plus léger
 
   #resolution of position
   quality_offset = dplyr::if_else(add_quality, width_qual, 0)#offset used to leave room for the quality logo
