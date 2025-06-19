@@ -54,7 +54,8 @@ Optionally a data quality indicator can also be added</p>
 <span>  position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bottom right"</span>, <span class="st">"bottom"</span>, <span class="st">"bottom left"</span>, <span class="st">"top right"</span>, <span class="st">"top"</span>, <span class="st">"top left"</span><span class="op">)</span>,</span>
 <span>  remove.margin <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  add_quality <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  quality_lvl <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  quality_lvl <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geometry_logo <span class="op">=</span> <span class="st">"200x"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,6 +101,10 @@ Optionally a data quality indicator can also be added</p>
 
 <dt id="arg-quality-lvl">quality_lvl<a class="anchor" aria-label="anchor" href="#arg-quality-lvl"></a></dt>
 <dd><p>numeric : Exhaustivity of the data used in percent (between 0 and 100)</p></dd>
+
+
+<dt id="arg-geometry-logo">geometry_logo<a class="anchor" aria-label="anchor" href="#arg-geometry-logo"></a></dt>
+<dd><p>char : Argument geometry utilisé dans magick::image_resize. geometry = "200x" par défaut</p></dd>
 
 </dl></div>
     <div class="section level2">
