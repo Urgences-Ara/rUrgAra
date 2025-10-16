@@ -4,8 +4,8 @@
 #'
 #' @format A list
 UrgAra_colors <- list(
-  `UrgAraBlue` = "#125486",
-  `UrgAraRed` = "#e91b1d",
+  `UrgAraBlue` = "#145587",
+  `UrgAraRed` = "#e52322",
   `UrgAraBlue2` = "#1c6fad",
   `UrgAraRed2` = "#e34041",
   `UrgAraGreen` = "#aecf38",
