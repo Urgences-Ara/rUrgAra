@@ -14,6 +14,9 @@
 <url><loc>/reference/clean_FINESS.html</loc></url>
 <url><loc>/reference/clean_commune.html</loc></url>
 <url><loc>/reference/df_ex_charge.html</loc></url>
+<url><loc>/reference/fct_calc_delay.html</loc></url>
+<url><loc>/reference/fct_convert_time_labels.html</loc></url>
+<url><loc>/reference/fct_f_big.html</loc></url>
 <url><loc>/reference/fct_format_control.html</loc></url>
 <url><loc>/reference/fct_make_icon_qual.html</loc></url>
 <url><loc>/reference/format_p_value.html</loc></url>
@@ -23,6 +26,7 @@
 <url><loc>/reference/pal_UrgAra.html</loc></url>
 <url><loc>/reference/pipe.html</loc></url>
 <url><loc>/reference/plot_add_logo.html</loc></url>
+<url><loc>/reference/plot_delais_intervals.html</loc></url>
 <url><loc>/reference/plot_diag_charge.html</loc></url>
 <url><loc>/reference/rUrgAra-package.html</loc></url>
 </urlset>
