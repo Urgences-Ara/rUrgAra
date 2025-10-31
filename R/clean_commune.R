@@ -62,7 +62,7 @@ clean_commune <- function(commune, CP = NULL, info = TRUE){
   #Cas spécifiques
   commune_propre = str_replace_all(commune_propre, "LYON0$", "LYON")
   commune_propre = str_replace(commune_propre, "ANNECY LE VIEUX", "ANNECY")
-  commune_propre = str_remove(commune_propre, "ER? ARRONDISSEMENT")
+  commune_propre = str_remove(commune_propre, "(ER?|EME) ARRONDISSEMENT")
   commune_propre = str_replace(commune_propre, "LYON (?=[1-9])", "LYON 0")
 
 
