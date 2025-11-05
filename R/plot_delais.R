@@ -192,7 +192,7 @@ fct_calc_delay <- function(base, d1, d2, lower_bound, upper_bound, min_display){
   n_noNA = sum(!is.na(del))
   #Nettoyage du label
   quantiles_del_clean = quantiles_del
-  if(all(quantiles_del_clean > 60)){#Passage en format 00h00 quand pertienent
+  if(all(quantiles_del_clean > 60, na.rm = TRUE) & any(!is.na(quantiles_del_clean))){#Passage en format 00h00 quand pertienent
     quantiles_del_clean = fct_convert_time_labels(quantiles_del_clean)
   }
 
