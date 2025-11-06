@@ -36,7 +36,7 @@
 
 %format titre section
 \sectionfont{\color{blueUrgAra}\bfseries\LARGE\sectionfontcustom}
-\subsectionfont{\color{white}\bfseries\Large\sectionfontcustom}
+\subsectionfont{\color{blueUrgAra}\bfseries\Large\sectionfontcustom}
 
 %définition commandes
 \AtBeginDocument{\let\maketitle\relax}%Supprime la page de garde
@@ -51,35 +51,51 @@
 
 %création du header section
 \footskip=56pt
-\newcommand{\makesubsection}[3]{%création d'un titre dans un bandeau {titre}{couleur}{icon}
+
+\newcommand{\makesubsection}[3]{% {titre}{couleurBandeau}{icone}
   \fboxsep0pt
-  \hspace{-1cm}
-  \colorbox{#2}{\hspace{1cm}\begin{minipage}[t][1cm][t]{20cm}
-    \vspace{-0.5cm}\hspace{1.1cm}\subsection{#1}
-    {\Large
-      \vspace{-1.7\baselineskip} % move up
-      \hfill
-      \includegraphics[height=11mm]{#3}\hspace{0.5cm}
-      \vspace{1.2\baselineskip}
-      }
-    \end{minipage}
-  }
+  \hspace{-1cm}%
+  \colorbox{#2}{%
+    \hspace{1cm}%
+    \begin{minipage}[t][1cm][t]{20cm}
+      \vspace{-0.5cm}\hspace{1.1cm}%
+      % Redéfinition locale : sous-section en blanc seulement ici
+      {\begingroup
+        \subsectionfont{\color{white}\bfseries\Large\sectionfontcustom}%
+        \subsection{#1}%
+      \endgroup}%
+      {\Large
+        \vspace{-1.7\baselineskip}% move up
+        \hfill\includegraphics[height=11mm]{#3}\hspace{0.5cm}%
+        \vspace{1.2\baselineskip}%
+      }%
+    \end{minipage}%
+  }%
 }
 
 
-\newcommand{\makesubsectionnoicon}[2]{%création d'un titre dans un bandeau {titre}{couleur}
+
+
+\newcommand{\makesubsectionnoicon}[2]{% {titre}{couleurBandeau}
   \fboxsep0pt
-  \hspace{-1cm}
-  \colorbox{#2}{\hspace{1cm}\begin{minipage}[t][1cm][t]{20cm}
-    \vspace{-0.5cm}\hspace{1.1cm}\subsection{#1}
-    {\Large
-      \vspace{-1.7\baselineskip} % move up
-      \hspace{0.5cm}
-      \vspace{1.2\baselineskip}
-      }
-    \end{minipage}
+  \hspace{-1cm}%
+  \colorbox{#2}{%
+    \hspace{1cm}%
+    \begin{minipage}[t][1cm][t]{20cm}
+      \vspace{-0.5cm}\hspace{1.1cm}%
+      % On redéfinit localement la couleur des sous-sections en blanc
+      {\begingroup
+        \subsectionfont{\color{white}\bfseries\Large\sectionfontcustom}%
+        \subsection{#1}%
+      \endgroup}
+      {\Large
+        \vspace{-1.7\baselineskip}% move up
+        \hspace{0.5cm}%
+        \vspace{1.2\baselineskip}%
+      }%
+    \end{minipage}%
+  }%
   }
-}
 
 %création du footer
 \def\companylogo{\includegraphics[width=\linewidth,height=70pt,keepaspectratio]{../img/logo_urgara_minimal.jpg}}
