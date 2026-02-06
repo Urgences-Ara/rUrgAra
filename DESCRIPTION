@@ -1,6 +1,6 @@
 Package: rUrgAra
 Title: UrgAra Package For Internal Use
-Version: 1.01
+Version: 1.02
 Authors@R: 
     person("Clément", "Claustre", , "clement.claustre@urgences-ara.fr", role = c("aut", "cre"))
 Description: Package developped to facilitate reccurent actions for
@@ -17,16 +17,21 @@ Imports:
     ggpubr,
     grDevices,
     grid,
+    jpeg,
     lubridate,
     magick,
     magrittr,
+    png,
     purrr,
     RColorBrewer,
     scales,
+    showtext,
     stats,
     stringr,
+    sysfonts,
     tibble,
-    tidyr
+    tidyr,
+    tools
 Suggests: 
     knitr,
     rmarkdown,

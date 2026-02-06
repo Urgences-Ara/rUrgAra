@@ -39,8 +39,8 @@ merge_complementary_variables <- function(data, var = NULL, prefix = NULL, exclu
                            value = T)} else {list_var_prefix = NULL}
 
   #selecting the table to merge
-  merge_table = data |>
-    select(all_of(list_var_prefix), all_of(var)) |>
+  merge_table = data %>%
+    select(all_of(list_var_prefix), all_of(var)) %>%
     select(-any_of(exclude))
 
   #check whether the variables are complementary

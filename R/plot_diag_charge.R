@@ -151,7 +151,7 @@ fct_tab_charge <- function(data, from, to, max_LOS){
   #For each hour of the day, count the number of patient present from wich time of arrival (-1 = day before)
   tab_n = lapply(seq(1, 24, by = 1), function(H){
     data_calc_charge_agreg %>%
-      dplyr::filter((.data$H_entry < H & .data$H_exit >= H) |
+      dplyr::filter((.data$H_entry < H & .data$H_exit >= H - 1) |
                       (.data$H_entry == H -1 & .data$H_exit == H - 1 & .data$exit_corrected_fact == 0) |
                       (H == 1 & .data$H_entry == "-1" & .data$H_exit == 0) |#special case first hour
                       (H == 24 & .data$exit_corrected_fact == 1) |#special case last hour not an exit if still there the day after
