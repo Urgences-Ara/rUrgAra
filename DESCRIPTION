@@ -28,10 +28,12 @@ Imports:
     showtext,
     stats,
     stringr,
+    svglite,
     sysfonts,
     tibble,
     tidyr,
-    tools
+    tools,
+    xml2
 Suggests: 
     knitr,
     rmarkdown,
