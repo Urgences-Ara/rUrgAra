@@ -21,6 +21,8 @@
   données
 - [`format_p_value()`](format_p_value.md) : format_p_value
 - [`get_template()`](get_template.md) : Extract template from rUrgAra
+- [`integrer_ggplot_svg()`](integrer_ggplot_svg.md) : Intégrer un
+  graphique ggplot dans un document SVG
 - [`make_pageGarde()`](make_pageGarde.md) : Page de garde UrgAra
 - [`merge_complementary_variables()`](merge_complementary_variables.md)
   : Merge complementary variables
@@ -29,3 +31,5 @@
 - [`plot_delais_intervals()`](plot_delais_intervals.md) : Plot des
   délais entre points temporels
 - [`plot_diag_charge()`](plot_diag_charge.md) : Plot a charge diagram
+- [`svg_remplacer_texte()`](svg_remplacer_texte.md) : Remplacer le texte
+  d'un élément SVG

@@ -10,6 +10,7 @@ You can install the development version of rUrgAra from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("https://github.com/Urgences-Ara/rUrgAra", build_vignettes = T)
 ```
@@ -19,5 +20,6 @@ devtools::install_github("https://github.com/Urgences-Ara/rUrgAra", build_vignet
 Exemples of use are available in the “Getting started” vignette
 
 ``` r
+
 vignette("Getting-started", package = "rUrgAra")
 ```

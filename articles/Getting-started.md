@@ -1,6 +1,7 @@
 # Getting-started
 
 ``` r
+
 library(rUrgAra)
 ```
 
@@ -15,6 +16,7 @@ This exemple shows how to plot a charge diagram using rUrgAra’s
 plot_diag_charge() from a table containing entry and exit date/times.
 
 ``` r
+
 #Table of entry/exit times
 head(df_ex_charge)
 #> # A tibble: 6 × 3
@@ -50,6 +52,7 @@ list_charge$plot
 
 ``` r
 
+
 #adding a strata to take into account that data are coming from two hospitals
 list_charge_stratified = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
                                           exit = "SORTIE", strata = "Etablissement",
@@ -74,6 +77,7 @@ list_charge_stratified$plot
 
 ``` r
 
+
 #Limiting the charge diagram to a set period
 list_charge_stratified = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
                                           exit = "SORTIE", strata = "Etablissement",
@@ -90,6 +94,7 @@ list_charge_stratified$plot +
 
 ``` r
 
+
 #Hiding the number of entry/exit
 list_charge_no_lines = plot_diag_charge(data = df_ex_charge, entry = "ENTREE",
                                           exit = "SORTIE", strata = "Etablissement",
@@ -105,6 +110,7 @@ This exemple shows how to add a company logo (by default UrgAra’s) to a
 ggplot object.
 
 ``` r
+
 plot_cars = ggplot2::ggplot(cars, ggplot2::aes(x = speed, y = dist)) +
   ggplot2::geom_point() +
   ggpubr::theme_pubclean()
@@ -115,12 +121,14 @@ plot_add_logo(plot_cars)#default
 ![](Getting-started_files/figure-html/example-plot_add_logo-1.png)
 
 ``` r
+
 plot_add_logo(plot_cars, position = "top left")#logo at the top
 ```
 
 ![](Getting-started_files/figure-html/example-plot_add_logo-2.png)
 
 ``` r
+
 plot_add_logo(plot_cars, width = 0.4)#wider logo
 ```
 
@@ -131,6 +139,7 @@ plot_add_logo(plot_cars, width = 0.4)#wider logo
 ### Applying rUrgAra palette to a color scale
 
 ``` r
+
 plot_iris = ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y =  Sepal.Width, color = Species)) +
   ggplot2::geom_point(size = 1.5)
 
@@ -140,6 +149,7 @@ plot_iris#default
 ![](Getting-started_files/figure-html/unnamed-chunk-2-1.png)
 
 ``` r
+
 
 plot_iris +
   ggplot2::scale_color_manual(values = pal_UrgAra()) +#Urg'Ara's color palette
@@ -152,6 +162,7 @@ plot_iris +
 ### Applying rUrgAra palette to a fill scale
 
 ``` r
+
 plot_iris_bar = ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y =  Sepal.Width, fill = Species)) +
   ggplot2::geom_col()
 
@@ -161,6 +172,7 @@ plot_iris_bar#default
 ![](Getting-started_files/figure-html/unnamed-chunk-3-1.png)
 
 ``` r
+
 
 plot_iris_bar +
   ggplot2::scale_fill_manual(values = pal_UrgAra()) +#Urg'Ara's color palette
@@ -172,6 +184,7 @@ plot_iris_bar +
 ### Applying rUrgAra palette to a dichotomous variable
 
 ``` r
+
 plot_iris_dicho = ggplot2::ggplot(iris, ggplot2::aes(x = 1, y =  Sepal.Width, fill = Sepal.Length > 5)) +
   ggplot2::geom_col()
 
@@ -181,6 +194,7 @@ plot_iris_dicho#default
 ![](Getting-started_files/figure-html/unnamed-chunk-4-1.png)
 
 ``` r
+
 
 plot_iris_dicho +
   ggplot2::scale_fill_manual(values = pal_UrgAra(palette = "duo")) +#Urg'Ara's color palette
@@ -194,5 +208,6 @@ plot_iris_dicho +
 You can import a template from rUrgAra using get_template
 
 ``` r
+
 get_template(template_name = "report", folder = "src/")
 ```
