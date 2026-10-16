@@ -1,80 +1,69 @@
 # Remplacer le texte d'un élément SVG
 
-Remplace le contenu textuel d'un élément d'un document SVG identifié par
-son attribut `id`.
+Remplace le contenu d'un élément texte SVG. Les valeurs multilignes sont
+réparties dans plusieurs éléments `tspan`.
 
 ## Usage
 
 ``` r
-svg_remplacer_texte(page_svg, id, valeur)
+svg_remplacer_texte(
+  svg,
+  id,
+  valeur,
+  interligne = "1.2em",
+  id_zone_centrage = NULL
+)
 ```
 
 ## Arguments
 
-- page_svg:
+- svg:
 
   Document SVG lu avec
   [`xml2::read_xml()`](http://xml2.r-lib.org/reference/read_xml.md).
 
 - id:
 
-  Chaîne de caractères correspondant à l'attribut `id` de l'élément SVG
-  dont le texte doit être remplacé.
+  Identifiant de l'élément texte à remplacer.
 
 - valeur:
 
-  Valeur à insérer dans l'élément SVG. Elle est convertie en chaîne de
-  caractères avec
-  [`as.character()`](https://rdrr.io/r/base/character.html).
+  Valeur à insérer. Un vecteur est interprété comme plusieurs lignes.
+  Les retours à la ligne `"\n"` sont également traités.
+
+- interligne:
+
+  Décalage vertical entre deux lignes. La valeur par défaut, `"1.2em"`,
+  correspond à 120 % de la taille de police.
+
+- id_zone_centrage:
+
+  Identifiant facultatif de l'objet sur lequel le texte doit être centré
+  horizontalement. L'objet peut être un cercle, une ellipse ou un
+  rectangle.
+
+  Si `NULL`, la position horizontale existante est conservée.
 
 ## Value
 
-Le document SVG modifié, sous la forme d'un objet XML.
+Le document SVG modifié, retourné invisiblement. Le document fourni dans
+`svg` est également modifié directement.
 
 ## Details
 
-Cette fonction est destinée à renseigner dynamiquement un gabarit SVG,
-par exemple avec le nom d'un établissement, une période ou la valeur
-d'un indicateur.
-
-L'élément est recherché avec une expression XPath portant sur son
-attribut `id`.
-
-Si aucun élément correspondant n'est trouvé, la fonction génère une
-erreur.
-
-La fonction modifie l'objet SVG puis le retourne. Elle n'écrit pas
-automatiquement le résultat dans un fichier. Le document produit peut
-être enregistré avec
-[`xml2::write_xml()`](http://xml2.r-lib.org/reference/write_xml.md).
-
-## See also
-
-[`integrer_ggplot_svg()`](integrer_ggplot_svg.md),
-[`xml2::read_xml()`](http://xml2.r-lib.org/reference/read_xml.md),
-[`xml2::write_xml()`](http://xml2.r-lib.org/reference/write_xml.md)
+ATTENTION : La fonction modifie directement l'arbre xml de "svg".
+L'objet est modifié même sans réatribution. La fonction est utilisée
+pour son effet de bord pas son retour.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-page_svg <- xml2::read_xml("gabarit.svg")
-
-page_svg <- svg_remplacer_texte(
-  page_svg = page_svg,
-  id = "nom_etablissement",
-  valeur = "CH BELLEY"
-)
-
-page_svg <- svg_remplacer_texte(
-  page_svg = page_svg,
-  id = "nombre_passages",
-  valeur = 5490
-)
-
-xml2::write_xml(
-  page_svg,
-  file = "rapport_CH_BELLEY.svg"
+svg_remplacer_texte(
+  svg = page_svg,
+  id = "txt_nb_passages_sous_pop",
+  valeur = c("14 538", "(58,4 %)"),
+  id_zone_centrage = "zone_txt_nb_passages_sous_pop"
 )
 } # }
 ```

@@ -23,6 +23,8 @@
 - [`get_template()`](get_template.md) : Extract template from rUrgAra
 - [`integrer_ggplot_svg()`](integrer_ggplot_svg.md) : Intégrer un
   graphique ggplot dans un document SVG
+- [`lister_zones_svg()`](lister_zones_svg.md) : Lister les zones
+  dynamiques d'un gabarit SVG
 - [`make_pageGarde()`](make_pageGarde.md) : Page de garde UrgAra
 - [`merge_complementary_variables()`](merge_complementary_variables.md)
   : Merge complementary variables

@@ -46,6 +46,10 @@ Le document SVG modifié, sous la forme d'un objet XML.
 
 ## Details
 
+ATTENTION : La fonction modifie directement l'arbre xml de "svg".
+L'objet est modifié même sans réatribution. La fonction est utilisée
+pour son effet de bord pas son retour.
+
 Le graphique est enregistré temporairement au format SVG avec svglite,
 puis son contenu vectoriel est copié dans le document SVG principal.
 
