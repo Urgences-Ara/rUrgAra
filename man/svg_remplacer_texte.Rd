@@ -4,64 +4,51 @@
 \alias{svg_remplacer_texte}
 \title{Remplacer le texte d'un élément SVG}
 \usage{
-svg_remplacer_texte(page_svg, id, valeur)
+svg_remplacer_texte(
+  svg,
+  id,
+  valeur,
+  interligne = "1.2em",
+  id_zone_centrage = NULL
+)
 }
 \arguments{
-\item{page_svg}{Document SVG lu avec \code{\link[xml2:read_xml]{xml2::read_xml()}}.}
+\item{svg}{Document SVG lu avec \code{\link[xml2:read_xml]{xml2::read_xml()}}.}
 
-\item{id}{Chaîne de caractères correspondant à l'attribut \code{id}
-de l'élément SVG dont le texte doit être remplacé.}
+\item{id}{Identifiant de l'élément texte à remplacer.}
 
-\item{valeur}{Valeur à insérer dans l'élément SVG. Elle est convertie
-en chaîne de caractères avec \code{\link[=as.character]{as.character()}}.}
+\item{valeur}{Valeur à insérer. Un vecteur est interprété comme plusieurs
+lignes. Les retours à la ligne \code{"\\n"} sont également traités.}
+
+\item{interligne}{Décalage vertical entre deux lignes. La valeur par défaut,
+\code{"1.2em"}, correspond à 120 \% de la taille de police.}
+
+\item{id_zone_centrage}{Identifiant facultatif de l'objet sur lequel le
+texte doit être centré horizontalement. L'objet peut être un cercle, une
+ellipse ou un rectangle.
+
+Si \code{NULL}, la position horizontale existante est conservée.}
 }
 \value{
-Le document SVG modifié, sous la forme d'un objet XML.
+Le document SVG modifié, retourné invisiblement. Le document fourni
+dans \code{svg} est également modifié directement.
 }
 \description{
-Remplace le contenu textuel d'un élément d'un document SVG identifié
-par son attribut \code{id}.
+Remplace le contenu d'un élément texte SVG. Les valeurs multilignes sont
+réparties dans plusieurs éléments \code{tspan}.
 }
 \details{
-Cette fonction est destinée à renseigner dynamiquement un gabarit SVG,
-par exemple avec le nom d'un établissement, une période ou la valeur
-d'un indicateur.
-
-L'élément est recherché avec une expression XPath portant sur son
-attribut \code{id}.
-
-Si aucun élément correspondant n'est trouvé, la fonction génère une
-erreur.
-
-La fonction modifie l'objet SVG puis le retourne. Elle n'écrit pas
-automatiquement le résultat dans un fichier. Le document produit peut
-être enregistré avec \code{\link[xml2:write_xml]{xml2::write_xml()}}.
+ATTENTION : La fonction modifie directement l'arbre xml de "svg". L'objet est modifié même
+sans réatribution. La fonction est utilisée pour son effet de bord pas son retour.
 }
 \examples{
 \dontrun{
-page_svg <- xml2::read_xml("gabarit.svg")
-
-page_svg <- svg_remplacer_texte(
-  page_svg = page_svg,
-  id = "nom_etablissement",
-  valeur = "CH BELLEY"
-)
-
-page_svg <- svg_remplacer_texte(
-  page_svg = page_svg,
-  id = "nombre_passages",
-  valeur = 5490
-)
-
-xml2::write_xml(
-  page_svg,
-  file = "rapport_CH_BELLEY.svg"
+svg_remplacer_texte(
+  svg = page_svg,
+  id = "txt_nb_passages_sous_pop",
+  valeur = c("14 538", "(58,4 \%)"),
+  id_zone_centrage = "zone_txt_nb_passages_sous_pop"
 )
 }
 
-}
-\seealso{
-\code{\link[=integrer_ggplot_svg]{integrer_ggplot_svg()}},
-\code{\link[xml2:read_xml]{xml2::read_xml()}},
-\code{\link[xml2:write_xml]{xml2::write_xml()}}
 }

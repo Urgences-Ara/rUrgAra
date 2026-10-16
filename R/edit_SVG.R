@@ -1,79 +1,284 @@
 #' Remplacer le texte d'un élément SVG
 #'
-#' Remplace le contenu textuel d'un élément d'un document SVG identifié
-#' par son attribut \code{id}.
+#' Remplace le contenu d'un élément texte SVG. Les valeurs multilignes sont
+#' réparties dans plusieurs éléments \code{tspan}.
 #'
-#' Cette fonction est destinée à renseigner dynamiquement un gabarit SVG,
-#' par exemple avec le nom d'un établissement, une période ou la valeur
-#' d'un indicateur.
+#' ATTENTION : La fonction modifie directement l'arbre xml de "svg". L'objet est modifié même
+#' sans réatribution. La fonction est utilisée pour son effet de bord pas son retour.
 #'
-#' @param page_svg Document SVG lu avec [xml2::read_xml()].
+#' @param svg Document SVG lu avec [xml2::read_xml()].
 #'
-#' @param id Chaîne de caractères correspondant à l'attribut \code{id}
-#'   de l'élément SVG dont le texte doit être remplacé.
+#' @param id Identifiant de l'élément texte à remplacer.
 #'
-#' @param valeur Valeur à insérer dans l'élément SVG. Elle est convertie
-#'   en chaîne de caractères avec [as.character()].
+#' @param valeur Valeur à insérer. Un vecteur est interprété comme plusieurs
+#'   lignes. Les retours à la ligne \code{"\\n"} sont également traités.
 #'
-#' @return Le document SVG modifié, sous la forme d'un objet XML.
+#' @param interligne Décalage vertical entre deux lignes. La valeur par défaut,
+#'   \code{"1.2em"}, correspond à 120 % de la taille de police.
 #'
-#' @details
-#' L'élément est recherché avec une expression XPath portant sur son
-#' attribut \code{id}.
+#' @param id_zone_centrage Identifiant facultatif de l'objet sur lequel le
+#'   texte doit être centré horizontalement. L'objet peut être un cercle, une
+#'   ellipse ou un rectangle.
 #'
-#' Si aucun élément correspondant n'est trouvé, la fonction génère une
-#' erreur.
+#'   Si \code{NULL}, la position horizontale existante est conservée.
 #'
-#' La fonction modifie l'objet SVG puis le retourne. Elle n'écrit pas
-#' automatiquement le résultat dans un fichier. Le document produit peut
-#' être enregistré avec [xml2::write_xml()].
+#' @return Le document SVG modifié, retourné invisiblement. Le document fourni
+#'   dans \code{svg} est également modifié directement.
 #'
 #' @examples
 #' \dontrun{
-#' page_svg <- xml2::read_xml("gabarit.svg")
-#'
-#' page_svg <- svg_remplacer_texte(
-#'   page_svg = page_svg,
-#'   id = "nom_etablissement",
-#'   valeur = "CH BELLEY"
-#' )
-#'
-#' page_svg <- svg_remplacer_texte(
-#'   page_svg = page_svg,
-#'   id = "nombre_passages",
-#'   valeur = 5490
-#' )
-#'
-#' xml2::write_xml(
-#'   page_svg,
-#'   file = "rapport_CH_BELLEY.svg"
+#' svg_remplacer_texte(
+#'   svg = page_svg,
+#'   id = "txt_nb_passages_sous_pop",
+#'   valeur = c("14 538", "(58,4 %)"),
+#'   id_zone_centrage = "zone_txt_nb_passages_sous_pop"
 #' )
 #' }
 #'
-#' @importFrom xml2 xml_find_first xml_text "xml_text<-"
-#'
-#' @seealso
-#' [integrer_ggplot_svg()],
-#' [xml2::read_xml()],
-#' [xml2::write_xml()]
-#'
 #' @export
-svg_remplacer_texte <- function(page_svg, id, valeur) {
+svg_remplacer_texte <- function(
+    svg,
+    id,
+    valeur,
+    interligne = "1.2em",
+    id_zone_centrage = NULL
+) {
 
-  xpath <- sprintf("//*[@id=\'%s\']", id)
-
-  noeud <- xml_find_first(page_svg, xpath)
+  # Recherche du texte à modifier
+  noeud <- xml2::xml_find_first(
+    svg,
+    sprintf("//*[@id=\'%s\']", id)
+  )
 
   if (inherits(noeud, "xml_missing")) {
     stop(
       "Identifiant absent du gabarit SVG : ",
-      id
+      id,
+      call. = FALSE
     )
   }
 
-  xml_text(noeud) <- as.character(valeur)
+  # Un vecteur est considéré comme une série de lignes.
+  # Les retours à la ligne sont également traités.
+  lignes <- unlist(
+    strsplit(
+      as.character(valeur),
+      split = "\n",
+      fixed = TRUE
+    ),
+    use.names = FALSE
+  )
 
-  return(page_svg)
+  if (length(lignes) == 0L) {
+    lignes <- ""
+  }
+
+  # Recherche des tspan existants
+  tspans <- xml2::xml_find_all(
+    noeud,
+    ".//*[local-name()=\'tspan\']"
+  )
+
+  # Conservation de la position verticale initiale
+  if (length(tspans) > 0L) {
+
+    y_initial <- xml2::xml_attr(
+      tspans[[1L]],
+      "y"
+    )
+
+  } else {
+
+    y_initial <- xml2::xml_attr(
+      noeud,
+      "y"
+    )
+  }
+
+  if (is.na(y_initial) || y_initial == "") {
+    y_initial <- "0"
+  }
+
+  # Position horizontale existante par défaut
+  if (length(tspans) > 0L) {
+
+    x <- xml2::xml_attr(
+      tspans[[1L]],
+      "x"
+    )
+
+  } else {
+
+    x <- xml2::xml_attr(
+      noeud,
+      "x"
+    )
+  }
+
+  if (is.na(x) || x == "") {
+    x <- "0"
+  }
+
+  # Centrage éventuel sur un objet de référence
+  if (!is.null(id_zone_centrage)) {
+
+    zone <- xml2::xml_find_first(
+      svg,
+      sprintf(
+        "//*[@id=\'%s\']",
+        id_zone_centrage
+      )
+    )
+
+    if (inherits(zone, "xml_missing")) {
+      stop(
+        "Zone de centrage absente du gabarit SVG : ",
+        id_zone_centrage,
+        call. = FALSE
+      )
+    }
+
+    type_zone <- xml2::xml_name(zone)
+
+    x_centre <- switch(
+      type_zone,
+
+      circle = as.numeric(
+        xml2::xml_attr(zone, "cx")
+      ),
+
+      ellipse = as.numeric(
+        xml2::xml_attr(zone, "cx")
+      ),
+
+      rect = {
+        x_zone <- as.numeric(
+          xml2::xml_attr(zone, "x")
+        )
+
+        largeur_zone <- as.numeric(
+          xml2::xml_attr(zone, "width")
+        )
+
+        x_zone + largeur_zone / 2
+      },
+
+      stop(
+        "La zone de centrage doit \u00eatre un cercle, ",
+        "une ellipse ou un rectangle. Type rencontr\u00e9 : ",
+        type_zone,
+        ".",
+        call. = FALSE
+      )
+    )
+
+    if (is.na(x_centre)) {
+      stop(
+        "Impossible de d\u00e9terminer le centre horizontal de la zone `",
+        id_zone_centrage,
+        "`.",
+        call. = FALSE
+      )
+    }
+
+    # Lecture du transform existant
+    transformation <- xml2::xml_attr(
+      noeud,
+      "transform"
+    )
+
+    # Cas fréquent produit par Illustrator :
+    # transform="translate(x y)"
+    motif_translate <- paste0(
+      "^translate\\(",
+      "\\s*[-+0-9.eE]+",
+      "[ ,]+",
+      "([-+0-9.eE]+)",
+      "\\s*\\)$"
+    )
+
+    if (
+      !is.na(transformation) &&
+      grepl(motif_translate, transformation)
+    ) {
+
+      y_translate <- sub(
+        motif_translate,
+        "\\1",
+        transformation
+      )
+
+      xml2::xml_attr(
+        noeud,
+        "transform"
+      ) <- sprintf(
+        "translate(%s %s)",
+        x_centre,
+        y_translate
+      )
+
+      # Les tspan sont positionnés par rapport au translate
+      x <- "0"
+
+    } else {
+
+      # En l'absence de translate, la coordonnée est absolue
+      x <- as.character(x_centre)
+    }
+
+    # Centrage dynamique du texte autour de x
+    xml2::xml_attr(
+      noeud,
+      "text-anchor"
+    ) <- "middle"
+  }
+
+  # Suppression des anciens tspan
+  if (length(tspans) > 0L) {
+    xml2::xml_remove(tspans)
+  }
+
+  # Suppression des éventuels textes directement contenus dans le nœud
+  noeuds_texte <- xml2::xml_find_all(
+    noeud,
+    "./text()[normalize-space()]"
+  )
+
+  if (length(noeuds_texte) > 0L) {
+    xml2::xml_remove(noeuds_texte)
+  }
+
+  # Création d'un tspan par ligne
+  for (i in seq_along(lignes)) {
+
+    nouveau_tspan <- xml2::xml_add_child(
+      noeud,
+      "tspan",
+      lignes[[i]]
+    )
+
+    xml2::xml_attr(
+      nouveau_tspan,
+      "x"
+    ) <- x
+
+    if (i == 1L) {
+
+      xml2::xml_attr(
+        nouveau_tspan,
+        "y"
+      ) <- y_initial
+
+    } else {
+
+      xml2::xml_attr(
+        nouveau_tspan,
+        "dy"
+      ) <- interligne
+    }
+  }
+
+  invisible(svg)
 }
 
 
@@ -82,6 +287,9 @@ svg_remplacer_texte <- function(page_svg, id, valeur) {
 #' Intègre un graphique \code{ggplot} dans une zone réservée d'un document
 #' SVG. La zone est identifiée par son attribut \code{id} et doit posséder
 #' les attributs \code{x}, \code{y}, \code{width} et \code{height}.
+#'
+#' ATTENTION : La fonction modifie directement l'arbre xml de "svg". L'objet est modifié même
+#' sans réatribution. La fonction est utilisée pour son effet de bord pas son retour.
 #'
 #' Le graphique est enregistré temporairement au format SVG avec
 #' \pkg{svglite}, puis son contenu vectoriel est copié dans le document SVG
@@ -269,5 +477,229 @@ integrer_ggplot_svg <- function(
   # 8. Suppression du rectangle repère
   xml_remove(zone)
 
-  return(page_svg)
+  invisible(page_svg)
 }
+
+
+
+
+
+#' Lister les zones dynamiques d'un gabarit SVG
+#'
+#' Recherche dans un document SVG les éléments dont l'identifiant commence
+#' par un préfixe associé aux zones de texte ou aux zones graphiques.
+#'
+#' Cette fonction permet notamment de vérifier rapidement les identifiants
+#' disponibles dans un gabarit SVG avant de remplacer les textes avec
+#' [svg_remplacer_texte()] ou d'intégrer des graphiques avec
+#' [integrer_ggplot_svg()].
+#'
+#' @param svg Document SVG lu avec [xml2::read_xml()].
+#'
+#' @param prefixe_texte Chaîne de caractères correspondant au préfixe utilisé
+#'   pour identifier les zones de texte. La valeur par défaut est
+#'   \code{"txt_"}.
+#'
+#' @param prefixe_plot Chaîne de caractères correspondant au préfixe utilisé
+#'   pour identifier les zones réservées aux graphiques. La valeur par défaut
+#'   est \code{"plot_"}.
+#'
+#' @return Un tibble comportant une ligne par zone trouvée et les colonnes
+#'   suivantes :
+#'
+#' \describe{
+#'   \item{\code{type}}{Type de zone : \code{"texte"} ou \code{"plot"}.}
+#'   \item{\code{id}}{Identifiant SVG de la zone.}
+#'   \item{\code{noeud}}{Nom du nœud SVG, par exemple \code{"text"},
+#'   \code{"rect"} ou \code{"g"}.}
+#'   \item{\code{contenu}}{Contenu textuel de l'élément. Cette colonne est
+#'   principalement utile pour les zones de texte.}
+#'   \item{\code{x}}{Coordonnée horizontale de l'élément, si disponible.}
+#'   \item{\code{y}}{Coordonnée verticale de l'élément, si disponible.}
+#'   \item{\code{width}}{Largeur de l'élément, si disponible.}
+#'   \item{\code{height}}{Hauteur de l'élément, si disponible.}
+#' }
+#'
+#' @details
+#' La recherche porte sur tous les éléments possédant un attribut
+#' \code{id}. Le type de zone est déterminé uniquement à partir du préfixe
+#' de cet identifiant.
+#'
+#' Par exemple :
+#'
+#' \itemize{
+#'   \item \code{txt_nb_passages} est classé comme zone de texte ;
+#'   \item \code{plot_diagramme_charge} est classé comme zone graphique.
+#' }
+#'
+#' Les colonnes de coordonnées correspondent aux attributs directement
+#' présents sur l'élément identifié. Si l'identifiant est porté par un groupe
+#' \code{<g>} plutôt que par le rectangle ou le texte lui-même, ces
+#' coordonnées peuvent être absentes.
+#'
+#' @examples
+#' \dontrun{
+#' # À partir d'un fichier SVG
+#' zones <- lister_zones_svg(
+#'   svg = "gabarit.svg"
+#' )
+#'
+#' zones
+#'
+#' # À partir d'un objet XML déjà chargé
+#' page_svg <- xml2::read_xml("gabarit.svg")
+#'
+#' zones <- lister_zones_svg(
+#'   svg = page_svg,
+#'   prefixe_texte = "label_",
+#'   prefixe_plot = "graphique_"
+#' )
+#'
+#' # Lister uniquement les identifiants des textes
+#' zones$id[zones$type == "texte"]
+#'
+#' # Lister uniquement les zones graphiques
+#' subset(zones, type == "plot")
+#' }
+#'
+#' @seealso
+#' [svg_remplacer_texte()],
+#' [integrer_ggplot_svg()],
+#' [xml2::read_xml()]
+#'
+#' @importFrom xml2 read_xml
+#' @importFrom xml2 xml_attr
+#' @importFrom xml2 xml_find_all
+#' @importFrom xml2 xml_name
+#' @importFrom xml2 xml_text
+#' @importFrom tibble tibble
+#'
+#' @export
+lister_zones_svg <- function(
+    svg,
+    prefixe_texte = "txt_",
+    prefixe_plot = "plot_"
+) {
+
+  # Contrôle des préfixes
+  if (
+    !is.character(prefixe_texte) ||
+    length(prefixe_texte) != 1L ||
+    is.na(prefixe_texte)
+  ) {
+    stop(
+      "`prefixe_texte` doit \u00eatre une cha\u00eene de caract\u00e8res de longueur 1.",
+      call. = FALSE
+    )
+  }
+
+  if (
+    !is.character(prefixe_plot) ||
+    length(prefixe_plot) != 1L ||
+    is.na(prefixe_plot)
+  ) {
+    stop(
+      "`prefixe_plot` doit \u00eatre une cha\u00eene de caract\u00e8res de longueur 1.",
+      call. = FALSE
+    )
+  }
+
+  if (identical(prefixe_texte, prefixe_plot)) {
+    stop(
+      "Les pr\u00e9fixes des textes et des graphiques doivent \u00eatre diff\u00e9rents.",
+      call. = FALSE
+    )
+  }
+
+  # Recherche de tous les éléments possédant un ID
+  noeuds <- xml2::xml_find_all(
+    svg,
+    "//*[@id]"
+  )
+
+  if (length(noeuds) == 0L) {
+    return(
+      tibble::tibble(
+        type = character(),
+        id = character(),
+        noeud = character(),
+        contenu = character(),
+        x = character(),
+        y = character(),
+        width = character(),
+        height = character()
+      )
+    )
+  }
+
+  ids <- xml2::xml_attr(noeuds, "id")
+
+  est_texte <- startsWith(
+    ids,
+    prefixe_texte
+  )
+
+  est_plot <- startsWith(
+    ids,
+    prefixe_plot
+  )
+
+  noeuds <- noeuds[est_texte | est_plot]
+  ids <- ids[est_texte | est_plot]
+  est_texte <- est_texte[est_texte | est_plot]
+
+  # Aucun identifiant correspondant aux préfixes
+  if (length(noeuds) == 0L) {
+    return(
+      tibble::tibble(
+        type = character(),
+        id = character(),
+        noeud = character(),
+        contenu = character(),
+        x = character(),
+        y = character(),
+        width = character(),
+        height = character()
+      )
+    )
+  }
+
+  resultat <- tibble::tibble(
+    type = ifelse(
+      est_texte,
+      "texte",
+      "plot"
+    ),
+    id = ids,
+    noeud = vapply(
+      noeuds,
+      xml2::xml_name,
+      FUN.VALUE = character(1)
+    ),
+    contenu = trimws(
+      vapply(
+        noeuds,
+        xml2::xml_text,
+        FUN.VALUE = character(1)
+      )
+    ),
+    x = xml2::xml_attr(noeuds, "x"),
+    y = xml2::xml_attr(noeuds, "y"),
+    width = xml2::xml_attr(noeuds, "width"),
+    height = xml2::xml_attr(noeuds, "height")
+  )
+
+  # Classement : textes, graphiques, puis identifiants
+  return(resultat[
+    order(
+      match(resultat$type, c("texte", "plot")),
+      resultat$id
+    ),
+  ])
+}
+
+
+
+
+
+
