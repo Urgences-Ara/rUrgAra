@@ -68,6 +68,5 @@ size  = c(25, 22, 22, 18)
 )
 img_path = system.file("img/exemple_page_garde.png", package = "rUrgAra")
 make_pageGarde(img_path = img_path, tab_labels = tab_labels, activate_showtext_auto = TRUE)
-#> Warning: libpng warning: iCCP: known incorrect sRGB profile
 
 ```

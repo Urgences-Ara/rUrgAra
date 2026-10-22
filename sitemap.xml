@@ -22,8 +22,6 @@
 <url><loc>/reference/format_p_value.html</loc></url>
 <url><loc>/reference/get_template.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/integrer_ggplot_svg.html</loc></url>
-<url><loc>/reference/lister_zones_svg.html</loc></url>
 <url><loc>/reference/make_pageGarde.html</loc></url>
 <url><loc>/reference/merge_complementary_variables.html</loc></url>
 <url><loc>/reference/pal_UrgAra.html</loc></url>
@@ -32,6 +30,8 @@
 <url><loc>/reference/plot_delais_intervals.html</loc></url>
 <url><loc>/reference/plot_diag_charge.html</loc></url>
 <url><loc>/reference/rUrgAra-package.html</loc></url>
+<url><loc>/reference/svg_integrer_ggplot.html</loc></url>
+<url><loc>/reference/svg_lister_zones.html</loc></url>
 <url><loc>/reference/svg_remplacer_texte.html</loc></url>
 </urlset>
 
