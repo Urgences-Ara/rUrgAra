@@ -362,7 +362,7 @@ svg_remplacer_texte <- function(
 #'   geom_col(fill = "#C8294A") +
 #'   theme_minimal()
 #'
-#' page_svg <- integrer_ggplot_svg(
+#' page_svg <- svg_integrer_ggplot(
 #'   page_svg = page_svg,
 #'   plot = graphique,
 #'   zone_id = "zone_graphique_activite"
@@ -385,7 +385,7 @@ svg_remplacer_texte <- function(
 #' [xml2::write_xml()]
 #'
 #' @export
-integrer_ggplot_svg <- function(
+svg_integrer_ggplot <- function(
     page_svg,
     plot,
     zone_id,
@@ -492,7 +492,7 @@ integrer_ggplot_svg <- function(
 #' Cette fonction permet notamment de vérifier rapidement les identifiants
 #' disponibles dans un gabarit SVG avant de remplacer les textes avec
 #' [svg_remplacer_texte()] ou d'intégrer des graphiques avec
-#' [integrer_ggplot_svg()].
+#' [svg_integrer_ggplot()].
 #'
 #' @param svg Document SVG lu avec [xml2::read_xml()].
 #'
@@ -540,7 +540,7 @@ integrer_ggplot_svg <- function(
 #' @examples
 #' \dontrun{
 #' # À partir d'un fichier SVG
-#' zones <- lister_zones_svg(
+#' zones <- svg_lister_zones(
 #'   svg = "gabarit.svg"
 #' )
 #'
@@ -549,7 +549,7 @@ integrer_ggplot_svg <- function(
 #' # À partir d'un objet XML déjà chargé
 #' page_svg <- xml2::read_xml("gabarit.svg")
 #'
-#' zones <- lister_zones_svg(
+#' zones <- svg_lister_zones(
 #'   svg = page_svg,
 #'   prefixe_texte = "label_",
 #'   prefixe_plot = "graphique_"
@@ -564,7 +564,7 @@ integrer_ggplot_svg <- function(
 #'
 #' @seealso
 #' [svg_remplacer_texte()],
-#' [integrer_ggplot_svg()],
+#' [svg_integrer_ggplot()],
 #' [xml2::read_xml()]
 #'
 #' @importFrom xml2 read_xml
@@ -575,7 +575,7 @@ integrer_ggplot_svg <- function(
 #' @importFrom tibble tibble
 #'
 #' @export
-lister_zones_svg <- function(
+svg_lister_zones <- function(
     svg,
     prefixe_texte = "txt_",
     prefixe_plot = "plot_"
